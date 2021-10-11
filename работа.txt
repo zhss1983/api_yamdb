@@ -1,0 +1,58 @@
+https://yandex.zoom.us/rec/share/0ZZqol4hib_ZljJkjurYuuzMmKWQuc6EEheZze3fL7Ercltt5a6lCNcv2ApK6cbU.9ls_2lK4-pt0lNeu
+https://yandex-students.slack.com/files/U01TVFTS77C/F02FP5B3QJW/colaborate_webinar.pdf?origin_team=TPV9DP0N4&origin_channel=C022N41HR5Z
+
+Таблици:
+
+Роли:
+	Иван: управление пользователями (Auth и Users): систему регистрации и аутентификации, права доступа, работу с токеном, систему подтверждения через e-mail.
+	Дмитрий: категории (Categories), жанры (Genres) и произведения (Titles): модели, представления и эндпойнты для них.
+	Сергей: Третий разработчик занимается отзывами (Review) и комментариями (Comments): описывает модели, представления, настраивает эндпойнты, определяет права доступа для запросов. Рейтинги произведений тоже достаются третьему разработчику.
+	
+	
+7) User
+	- id
+	- username
+	- email
+	- role
+	- bio
+	- first_name
+	- last_name
+
+3) Category - Категории, по аналогии с группами только для товаров. Меняется только админом.
+	- id
+	- "name": "string",
+	- "slug": "string"
+
+4) Genry - отдельная страница жанров.
+	- id
+	- "name": "string",
+	- "slug": "string"
+
+2) Titles - имена произведений.
+	- id
+	- "name": "string",
+	- "year": 0,
+	- "rating": 0, оценка в диапазоне от одного до десяти (целое число)
+	- genre - связь с таблицей genre (many_to_many) через таблицу genre_title, см. Kittygram2Plus.
+	- "category" ссулка на таблицу
+
+6) genre_title - таблица для связи многие ко многим.
+	- id
+	- title_id
+	- genre_id
+
+1) Review - отзыв пользователя о произведении (Titles). На одно произведение пользователь может оставить только один отзыв (уникальное сочетание полей id + title_id).
+	- id
+	- title_id
+	- text
+	- author
+	- score
+	- pub_date
+
+5) comments - Комментарии к отзывам - как комментраии к статьям в yatube
+	- id
+	- review_id
+	- text
+	- author
+	- pub_date
+
