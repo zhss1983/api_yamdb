@@ -1,11 +1,9 @@
-from .models.user import User
-from .models.category import Category
-from .models.genre import Genre
-from .models.titles import Titles
-from .models.review import Review
-from .models.comment import Comment
+from django.contrib.auth.models import AbstractUser
 
-
-
-
-
+from .model.category import Category
+from .model.comment import Comment
+from .model.genre import Genre
+from .model.genre_title import Genre_Title
+from .model.review import Review
+from .model.titles import Titles
+from .model.user import User
