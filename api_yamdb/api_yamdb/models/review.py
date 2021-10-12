@@ -5,6 +5,7 @@ from .titles import Titles
 
 
 class Review(models.Model):
+    #title = models.IntegerField()
     title = models.ForeignKey(
         Titles,
         verbose_name='Произведение',
@@ -12,6 +13,7 @@ class Review(models.Model):
         related_name='reviews'
     )
     text = models.TextField('Отзыв')
+    #author = models.IntegerField()
     author = models.ForeignKey(
         User,
         verbose_name='Автор',

@@ -5,6 +5,7 @@ from .review import Review
 
 
 class Comment(models.Model):
+    #review = models.IntegerField()
     review = models.ForeignKey(
         Review,
         verbose_name='Отзыв',
@@ -12,6 +13,7 @@ class Comment(models.Model):
         related_name='comments'
     )
     text = models.TextField('Текст')
+    #author = models.IntegerField()
     author = models.ForeignKey(
         User,
         verbose_name='Автор',
