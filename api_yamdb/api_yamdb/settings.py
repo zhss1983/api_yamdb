@@ -21,8 +21,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'reviews.apps.ReviewsConfig',
-    'api_yamdb.apps.Api_yamdbConfig',
+    'rest_framework',
+    'reviews',
+    'api_yamdb',
 ]
 
 MIDDLEWARE = [
@@ -107,5 +108,3 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
 AUTH_USER_MODEL = 'api_yamdb.User'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
-
-# Комент zhss + ivan

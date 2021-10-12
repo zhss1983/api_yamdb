@@ -7,58 +7,31 @@ from rest_framework.viewsets import (
 
 from django.shortcuts import get_object_or_404
 
-from .permissions import IsAuthorOrAnyReadOnly
-from .serializers import (
-    CommentAuthorSerializer, FollowSerializer,
-    GroupSerializer, PostAuthorSerializer
-)
-from posts.models import Follow, Group, Post
+#from .permissions import IsAuthorOrAnyReadOnly
+from .models import Titles, Review
+
+from .serializers import CommentAuthorSerializer, ReviewSerializer
 
 
-class AuthorBaseViewSet(ModelViewSet):
-    permission_classes = (IsAuthorOrAnyReadOnly,)
-
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
-
-
-class CommentViewSetAuthor(AuthorBaseViewSet):
+class CommentViewSetAuthor(ModelViewSet):
     serializer_class = CommentAuthorSerializer
+    permission_classes = (AllowAny,)
 
-    def __get_post(self):
-        post_id = self.kwargs.get('post_id')
-        return get_object_or_404(Post, pk=post_id)
+
+class ReviewViewSet(ModelViewSet):
+    serializer_class = ReviewSerializer
+    permission_classes = (AllowAny,)
+    pagination_class = LimitOffsetPagination
+
+    def __get_title(self):
+        title_id = self.kwargs.get('title_id')
+        return get_object_or_404(Titles, pk=title_id)
 
     def perform_create(self, serializer):
-        post = self.__get_post()
-        serializer.validated_data['post'] = post
+        title = self.__get_title()
+        serializer.validated_data['title'] = title
         super().perform_create(serializer)
 
     def get_queryset(self):
-        post = self.__get_post()
-        return post.comments
-
-
-class PostViewSetAuthor(AuthorBaseViewSet):
-    pagination_class = LimitOffsetPagination
-    serializer_class = PostAuthorSerializer
-    queryset = Post.objects.all()
-
-
-class GroupViewSet(ReadOnlyModelViewSet):
-    permission_classes = (AllowAny,)
-    serializer_class = GroupSerializer
-    queryset = Group.objects.all()
-
-
-class FollowViewSet(CreateModelMixin, ListModelMixin, GenericViewSet):
-    permission_classes = (IsAuthenticated,)
-    filter_backends = (SearchFilter,)
-    search_fields = ('=following__username',)
-    serializer_class = FollowSerializer
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
-    def get_queryset(self):
-        return Follow.objects.filter(user=self.request.user)
+        title = self.__get_title()
+        return title.reviews
