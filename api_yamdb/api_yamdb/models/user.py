@@ -17,3 +17,7 @@ class User(AbstractUser):
         max_length=1,
         choices=ACCESS_LEVEL
     )
+
+    class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'

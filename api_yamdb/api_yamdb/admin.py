@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Category, Comment, Genre, Review, Titles
+from .models import Category, Comment, Genre, Review, Titles, User
 
 EMPTY = '-пусто-'
 
@@ -38,8 +38,14 @@ class TitlesAdmin(admin.ModelAdmin):
     search_fields = ('name', 'year')
 
 
+class UsersAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'username', 'role')
+    search_fields = ('username',)
+
+
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Genre, GenreAdmin)
 admin.site.register(Review, ReviewAdmin)
 admin.site.register(Titles, TitlesAdmin)
+admin.site.register(User, UsersAdmin)
