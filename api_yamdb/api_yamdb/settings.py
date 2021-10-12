@@ -108,4 +108,4 @@ AUTH_USER_MODEL = 'api_yamdb.User'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
-# Комент от zhss
+# Комент zhss + ivan
