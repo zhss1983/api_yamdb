@@ -3,7 +3,7 @@ from .comment import Comment
 from .genre import Genre
 from .genre_title import Genre_Title
 from .review import Review
-from .titles import Titles
+from .titles import Title
 from .user import User
 
 __all__ = [
@@ -12,6 +12,6 @@ __all__ = [
     'Genre',
     'Genre_Title',
     'Review',
-    'Titles',
+    'Title',
     'User',
 ]

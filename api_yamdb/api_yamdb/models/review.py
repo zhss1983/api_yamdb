@@ -1,13 +1,13 @@
 from django.db import models
 
 from .user import User
-from .titles import Titles
+from .titles import Title
 
 
 class Review(models.Model):
     #title = models.IntegerField()
     title = models.ForeignKey(
-        Titles,
+        Title,
         verbose_name='Произведение',
         on_delete=models.PROTECT,
         related_name='reviews'
