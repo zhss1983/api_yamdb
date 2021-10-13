@@ -1,3 +1,4 @@
+from django.db.models import fields
 from rest_framework.exceptions import ValidationError
 from rest_framework.serializers import (
     CurrentUserDefault, ModelSerializer, SlugRelatedField)
@@ -19,3 +20,7 @@ class ReviewSerializer(ModelSerializer):
 
     # Повесить валидатор на score
 
+class TitleSerializer(ModelSerializer):
+    class Meta:
+        fields = '__all__'
+        model = Titles

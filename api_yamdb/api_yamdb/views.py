@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404
 #from .permissions import IsAuthorOrAnyReadOnly
 from .models import Titles, Review
 
-from .serializers import CommentAuthorSerializer, ReviewSerializer
+from .serializers import CommentAuthorSerializer, ReviewSerializer, TitleSerializer
 
 
 class CommentViewSetAuthor(ModelViewSet):
