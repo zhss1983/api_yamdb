@@ -4,8 +4,8 @@ from django.urls import include
 from django.views.generic import TemplateView
 
 from rest_framework.routers import DefaultRouter
-from rest_framework_simplejwt.views import TokenObtainPairView
 
+from users.views import UserRegisterViewSet
 from .views import CommentViewSetAuthor, ReviewViewSet
 
 api_router_v1 = DefaultRouter()
@@ -19,6 +19,12 @@ api_router_v1.register(
     CommentViewSetAuthor,
     basename='comments'
 )  # r'posts/(?P<post_id>\d+)/
+
+api_router_v1.register(
+    'register',
+    UserRegisterViewSet,
+    basename='register'
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

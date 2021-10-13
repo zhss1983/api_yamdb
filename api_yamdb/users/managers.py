@@ -2,7 +2,8 @@ from django.contrib.auth.base_user import BaseUserManager
 
 
 class CustomUserManager(BaseUserManager):
-    def create_user(self, email, password, **extra_fields):
+    def create_user(self, email, password=None,
+                    **extra_fields):
         """
         Проверяет наличие email при создании пользователя
         и сохраняет пароль в шифрованном виде.
@@ -15,7 +16,8 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password, **extra_fields):
+    def create_superuser(self, email, password=None,
+                         **extra_fields):
         """Создаёт и сохраняет суперпользователя."""
 
         extra_fields.setdefault('is_staff', True)
