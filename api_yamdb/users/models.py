@@ -13,13 +13,16 @@ class User(AbstractUser):
     role = models.CharField(
         'Права',
         max_length=1,
-        choices=ACCESS_LEVEL
+        choices=ACCESS_LEVEL,
+        default='user'
     )
     bio = models.TextField(
         'Биография',
         blank=True,
     )
     email = models.EmailField(unique=True)
+
+    REQUIRED_FIELDS = []
 
     class Meta:
         verbose_name = 'Пользователь'
