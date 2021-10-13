@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from users.models import User
 
-from .models import Category, Comment, Genre, Review, Titles
+from .models import Category, Comment, Genre, Review, Title
 
 EMPTY = '-пусто-'
 
@@ -35,7 +35,7 @@ class ReviewAdmin(admin.ModelAdmin):
     empty_value_display = EMPTY
 
 
-class TitlesAdmin(admin.ModelAdmin):
+class TitleAdmin(admin.ModelAdmin):
     list_display = ('pk', 'name', 'year', 'category')
     search_fields = ('name', 'year')
 
@@ -58,5 +58,5 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Genre, GenreAdmin)
 admin.site.register(Review, ReviewAdmin)
-admin.site.register(Titles, TitlesAdmin)
+admin.site.register(Title, TitleAdmin)
 admin.site.register(User, UserAdmin)

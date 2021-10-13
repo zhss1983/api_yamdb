@@ -4,7 +4,7 @@ from .category import Category
 from .genre import Genre
 
 
-class Titles(models.Model):
+class Title(models.Model):
     name = models.CharField(
         verbose_name='Произведение', max_length=200)
     year = models.DateTimeField(

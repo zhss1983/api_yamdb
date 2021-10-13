@@ -1,6 +1,6 @@
-id;password;last_login;is_superuser;username;first_name;last_name;email;is_staff;is_active;date_joined;bio;role
-100;;;0;bingobongo;;;bingobongo@yamdb.fake;1;1;;;user
-101;;;0;capt_obvious;;;capt_obvious@yamdb.fake;1;1;;;admin
-102;;;0;faust;;;faust@yamdb.fake;1;1;;;user
-103;;;0;reviewer;;;reviewer@yamdb.fake;1;1;;;user
-104;;;0;angry;;;angry@yamdb.fake;1;1;;;moderator
+id;password;last_login;is_superuser;username;first_name;last_name;is_staff;is_active;date_joined;bio;role;email
+100;;;0;bingobongo;;;1;1;;;user;bingobongo@yamdb.fake
+101;;;0;capt_obvious;;;1;1;;;admin;capt_obvious@yamdb.fake
+102;;;0;faust;;;1;1;;;user;faust@yamdb.fake
+103;;;0;reviewer;;;1;1;;;user;reviewer@yamdb.fake
+104;;;0;angry;;;1;1;;;moderator;angry@yamdb.fake

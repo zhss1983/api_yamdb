@@ -9,7 +9,7 @@ from rest_framework.viewsets import (
 from django.shortcuts import get_object_or_404
 
 from .permissions import IsAuthorOrModeratorOrReadOnly
-from .models import Titles, Review
+from .models import Title, Review
 from .serializers import CommentAuthorSerializer, ReviewSerializer, TitleSerializer
 
 
@@ -20,7 +20,7 @@ class ReviewViewSet(ModelViewSet):
 
     def __get_title(self):
         title_id = self.kwargs.get('title_id')
-        return get_object_or_404(Titles, pk=title_id)
+        return get_object_or_404(Title, pk=title_id)
 
     def perform_create(self, serializer):
         title = self.__get_title()
