@@ -5,7 +5,7 @@ from django.views.generic import TemplateView
 
 from rest_framework.routers import DefaultRouter
 
-from users.views import UserRegisterViewSet
+from users.views import UserViewSet
 from .views import CommentViewSetAuthor, ReviewViewSet
 
 api_router_v1 = DefaultRouter()
@@ -21,9 +21,9 @@ api_router_v1.register(
 )  # r'posts/(?P<post_id>\d+)/
 
 api_router_v1.register(
-    'register',
-    UserRegisterViewSet,
-    basename='register'
+    'users',
+    UserViewSet,
+    basename='users'
 )
 
 urlpatterns = [
