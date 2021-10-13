@@ -15,10 +15,10 @@ api_router_v1.register(
     basename='reviews'
 )
 api_router_v1.register(
-    'comments',
+    r'titles/(?P<title_id>\d+)/reviews/(?P<review_id>\d+)/comments',
     CommentViewSetAuthor,
     basename='comments'
-)  # r'posts/(?P<post_id>\d+)/
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
