@@ -5,45 +5,54 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.viewsets import (
     GenericViewSet, ModelViewSet, ReadOnlyModelViewSet)
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, SAFE_METHODS, BasePermission, AllowAny
 
 from django.shortcuts import get_object_or_404
 
-from .permissions import IsAuthorOrModeratorOrReadOnly
+from .permissions import EditAccessOrReadOnly
 from .models import Title, Review
 from .serializers import CommentAuthorSerializer, ReviewSerializer, TitleSerializer
 
 
-class ReviewViewSet(ModelViewSet):
-    serializer_class = ReviewSerializer
-    permission_classes = (IsAuthorOrModeratorOrReadOnly,)
+class GetTitleBaseViewSet(ModelViewSet):
+    permission_classes = (EditAccessOrReadOnly, )
     pagination_class = PageNumberPagination
 
-    def __get_title(self):
+    def get_title(self):
         title_id = self.kwargs.get('title_id')
         return get_object_or_404(Title, pk=title_id)
 
+
+class GetReviewBaseViewSet(GetTitleBaseViewSet):
+
+    def get_review(self):
+        title = self.get_title()
+        review_id = self.kwargs.get('review_id')
+        return get_object_or_404(title.reviews, pk=review_id)
+
+
+class ReviewViewSet(GetTitleBaseViewSet):
+    serializer_class = ReviewSerializer
+
     def perform_create(self, serializer):
-        title = self.__get_title()
-        serializer.validated_data['title'] = title
-        super().perform_create(serializer)
+        serializer.save(
+            author=self.request.user,
+            title=self.get_title()
+        )
 
     def get_queryset(self):
-        title = self.__get_title()
+        title = self.get_title()
         return title.reviews.all()
 
-class CommentViewSetAuthor(ReviewViewSet):
+class CommentViewSet(GetReviewBaseViewSet):
     serializer_class = CommentAuthorSerializer
 
-    def __get_review(self):
-        review_id = self.kwargs.get('review_id')
-        return get_object_or_404(Review, pk=review_id)
-
     def perform_create(self, serializer):
-        title = self.__get_title()
-        review = self.__get_review()
-        serializer.validated_data['title'] = title
-        super().perform_create(serializer)
+        serializer.save(
+            author=self.request.user,
+            review=self.get_review()
+        )
 
     def get_queryset(self):
-        title = self.__get_title()
-        return title.reviews.all()
+        review = self.get_review()
+        return review.comments.all()
