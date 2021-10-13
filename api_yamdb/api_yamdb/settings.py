@@ -108,3 +108,8 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
 AUTH_USER_MODEL = 'api_yamdb.User'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 2
+}

@@ -16,7 +16,7 @@ class CommentAuthorSerializer(ModelSerializer):
 
 class ReviewSerializer(ModelSerializer):
     class Meta:
-        fields = ['text', 'author', 'score', 'pub_date']
+        fields = ['id', 'text', 'author', 'score', 'pub_date']
         model = Review
 
     def validate_score(self, value):
