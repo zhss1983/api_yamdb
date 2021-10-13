@@ -35,3 +35,4 @@ class ReviewViewSet(ModelViewSet):
     def get_queryset(self):
         title = self.__get_title()
         return title.reviews
+

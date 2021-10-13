@@ -28,7 +28,4 @@ urlpatterns = [
         name='redoc'
     ),
     path('api/v1/', include(api_router_v1.urls)),
-    # Getting token pair for user
-    path('api/v1/auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-
-]
+ ]
