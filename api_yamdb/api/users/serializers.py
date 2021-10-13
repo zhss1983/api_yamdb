@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from api.users.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -11,5 +11,5 @@ class UserSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'bio',
-            'role'
+            'role',
         )

@@ -1,6 +1,6 @@
 from django.db import models
 
-from users.models import User
+from api.users.models import User
 from .review import Review
 
 

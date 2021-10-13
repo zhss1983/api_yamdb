@@ -1,8 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-from .managers import CustomUserManager
-
 
 class User(AbstractUser):
     ACCESS_LEVEL = (
@@ -12,7 +10,7 @@ class User(AbstractUser):
     )
     role = models.CharField(
         'Права',
-        max_length=1,
+        max_length=9,
         choices=ACCESS_LEVEL,
         default='user'
     )
@@ -22,13 +20,11 @@ class User(AbstractUser):
     )
     email = models.EmailField(unique=True)
 
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['email']
 
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
-
-    objects = CustomUserManager()
 
     def __str__(self):
         return self.username
