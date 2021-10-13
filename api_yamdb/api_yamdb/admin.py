@@ -1,3 +1,5 @@
+from django import forms
+
 from django.contrib import admin
 
 from .models import Category, Comment, Genre, Review, Titles, User
@@ -41,6 +43,16 @@ class TitlesAdmin(admin.ModelAdmin):
 class UsersAdmin(admin.ModelAdmin):
     list_display = ('pk', 'username', 'role')
     search_fields = ('username',)
+
+    def save_model(self, request, obj, form, change):
+        """
+        Перехватывает строку из админки, шифрует
+        пароль. Без переопределения функции, пароль
+        сохраняется в БД в виде нешифрованной строки.
+        """
+        str_password = obj.password
+        obj.set_password(str_password)
+        obj.save()
 
 
 admin.site.register(Category, CategoryAdmin)
