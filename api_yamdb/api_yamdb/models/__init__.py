@@ -4,7 +4,6 @@ from .genre import Genre
 from .genre_title import Genre_Title
 from .review import Review
 from .titles import Titles
-from .user import User
 
 __all__ = [
     'Category',
@@ -13,5 +12,4 @@ __all__ = [
     'Genre_Title',
     'Review',
     'Titles',
-    'User',
 ]

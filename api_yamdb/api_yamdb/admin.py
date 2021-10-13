@@ -1,8 +1,8 @@
-from django import forms
-
 from django.contrib import admin
 
-from .models import Category, Comment, Genre, Review, Titles, User
+from users.models import User
+
+from .models import Category, Comment, Genre, Review, Titles
 
 EMPTY = '-пусто-'
 
@@ -40,18 +40,17 @@ class TitlesAdmin(admin.ModelAdmin):
     search_fields = ('name', 'year')
 
 
-class UsersAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'username', 'role')
-    search_fields = ('username',)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'username', 'email', 'role')
+    search_fields = ('username', )
 
     def save_model(self, request, obj, form, change):
         """
-        Перехватывает строку из админки, шифрует
-        пароль. Без переопределения функции, пароль
-        сохраняется в БД в виде нешифрованной строки.
+        Добавляет шифрование пароля при создании
+        пользователя через админку. Без переопределения
+        метода пароль в БД хранится в виде строки.
         """
-        str_password = obj.password
-        obj.set_password(str_password)
+        obj.set_password(obj.password)
         obj.save()
 
 
@@ -60,4 +59,4 @@ admin.site.register(Comment, CommentAdmin)
 admin.site.register(Genre, GenreAdmin)
 admin.site.register(Review, ReviewAdmin)
 admin.site.register(Titles, TitlesAdmin)
-admin.site.register(User, UsersAdmin)
+admin.site.register(User, UserAdmin)

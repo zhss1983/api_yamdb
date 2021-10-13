@@ -18,3 +18,4 @@ class ReviewSerializer(ModelSerializer):
         model = Review
 
     # Повесить валидатор на score
+
