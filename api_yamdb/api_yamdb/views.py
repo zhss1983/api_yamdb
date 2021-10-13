@@ -13,11 +13,6 @@ from .models import Titles, Review
 from .serializers import CommentAuthorSerializer, ReviewSerializer
 
 
-class CommentViewSetAuthor(ModelViewSet):
-    serializer_class = CommentAuthorSerializer
-    permission_classes = (AllowAny,)
-
-
 class ReviewViewSet(ModelViewSet):
     serializer_class = ReviewSerializer
     permission_classes = (AllowAny,)
@@ -29,6 +24,23 @@ class ReviewViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         title = self.__get_title()
+        serializer.validated_data['title'] = title
+        super().perform_create(serializer)
+
+    def get_queryset(self):
+        title = self.__get_title()
+        return title.reviews
+
+class CommentViewSetAuthor(ReviewViewSet):
+    serializer_class = CommentAuthorSerializer
+
+    def __get_review(self):
+        review_id = self.kwargs.get('review_id')
+        return get_object_or_404(Review, pk=review_id)
+
+    def perform_create(self, serializer):
+        title = self.__get_title()
+        review = self.__get_review()
         serializer.validated_data['title'] = title
         super().perform_create(serializer)
 
