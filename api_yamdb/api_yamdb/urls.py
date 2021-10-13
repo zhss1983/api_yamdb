@@ -4,8 +4,8 @@ from django.urls import include
 from django.views.generic import TemplateView
 
 from rest_framework.routers import DefaultRouter
-from rest_framework_simplejwt.views import TokenObtainPairView
 
+from users.views import UserViewSet
 from .views import CommentViewSetAuthor, ReviewViewSet
 
 api_router_v1 = DefaultRouter()
@@ -18,6 +18,12 @@ api_router_v1.register(
     r'titles/(?P<title_id>\d+)/reviews/(?P<review_id>\d+)/comments',
     CommentViewSetAuthor,
     basename='comments'
+)
+
+api_router_v1.register(
+    'users',
+    UserViewSet,
+    basename='users'
 )
 
 urlpatterns = [
