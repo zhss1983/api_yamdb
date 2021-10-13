@@ -15,6 +15,10 @@ class User(AbstractUser):
         max_length=1,
         choices=ACCESS_LEVEL
     )
+    bio = models.TextField(
+        'Биография',
+        blank=True,
+    )
     email = models.EmailField(unique=True)
 
     class Meta:
