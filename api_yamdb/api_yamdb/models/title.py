@@ -1,4 +1,7 @@
+import datetime as dt
+
 from django.db import models
+from django.db.models.functions import Now
 
 from .category import Category
 from .genre import Genre
@@ -19,3 +22,11 @@ class Title(models.Model):
         related_name='category',
     )
     description = models.TextField('Описание')
+
+    class Meta:
+        constraints = (
+            models.CheckConstraint(
+                check=models.Q(year__gt=Now()),
+                name="year_cannot_be_bigger_then_current"
+            ),
+        )
