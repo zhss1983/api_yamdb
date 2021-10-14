@@ -1,8 +1,12 @@
 from django.contrib import admin
 
+<<<<<<< HEAD
 from users.models import User
 
 from .models import Category, Comment, Genre, Review, Title
+=======
+from .models import Category, Comment, Genre, Review, Title, User
+>>>>>>> f7b44bc (Добавил вьюсет для произведений, пофиксил Titles - Title в некоторых файлах)
 
 EMPTY = '-пусто-'
 
