@@ -28,26 +28,11 @@ class ReviewSerializer(ModelSerializer):
         return value
 
 
-<<<<<<< Updated upstream
 class TitleSerializer(ModelSerializer):
     class Meta:
         fields = '__all__'
         model = Title
 
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-    def validate_score(self, value):
-        if not (isinstance(value, int) and 0 <= value <= 10):
-            raise ValidationError(SCORE_VALIDATION_ERROR_MESSAGE)
-        return value
-
-class TitleSerializer(ModelSerializer):
-    class Meta:
-        fields = '__all__'
-        model = Title
-=======
     # Добавить расчёт средней оценки.
     # Добавить кэш на данное поле или данную таблицу.
     # Добавить создание сопутствующих записей при их наличии.
->>>>>>> zhss
