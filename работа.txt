@@ -75,3 +75,8 @@ USERS	13	На стадии завершения
 
 SELECT title_id, AVG(score) as average FROM api_yamdb_review GROUP BY title_id;
 SELECT AVG(score) as average FROM api_yamdb_review WHERE title_id == 17;
+
+{
+    "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTYzNDI5MjkwMywianRpIjoiYzFlNmRkMWQ1MDIzNGRhMTgzYmQwOWJjYTQ5OWYwOWUiLCJ1c2VyX2lkIjoxfQ.rap-xx2jh7jg9TB7OyYuTFTF2KeprospPA1EfMcFKhI",
+    "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjM0MjkyOTAzLCJqdGkiOiI5MzBkZmE0ZDZmYWE0YTg3OThiODk4YTYxOGZiYjJiOCIsInVzZXJfaWQiOjF9.99ZjfGGCvEkFEm6wQOraJk7T9TxGPwbB7Nl6fxjGYtQ"
+}

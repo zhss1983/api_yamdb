@@ -11,7 +11,7 @@ from django.shortcuts import get_object_or_404
 
 from .permissions import EditAccessOrReadOnly
 from .models import Title, Review
-from .serializers import CommentAuthorSerializer, ReviewSerializer, TitleSerializer
+from .serializers import CommentSerializer, ReviewSerializer, TitleSerializer
 
 
 class GetTitleBaseViewSet(ModelViewSet):
@@ -46,7 +46,7 @@ class ReviewViewSet(GetTitleBaseViewSet):
 
 
 class CommentViewSet(GetReviewBaseViewSet):
-    serializer_class = CommentAuthorSerializer
+    serializer_class = CommentSerializer
 
     def perform_create(self, serializer):
         serializer.save(
