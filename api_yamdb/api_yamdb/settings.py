@@ -16,7 +16,6 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'users.apps.UsersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -26,6 +25,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'reviews',
     'api_yamdb',
+    'api.users',
 ]
 
 MIDDLEWARE = [
