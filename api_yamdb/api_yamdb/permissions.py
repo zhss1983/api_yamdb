@@ -10,5 +10,5 @@ class EditAccessOrReadOnly(IsAuthenticatedOrReadOnly):
         return (
             obj.author == request.user or
             request.user.is_staff or
-            request.user.role in 'MA'
+            request.user.role in 'ma'
         )

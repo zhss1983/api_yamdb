@@ -1,7 +1,8 @@
 import datetime as dt
+from time import strftime
 
 from django.db import models
-from django.db.models.functions import Now
+from django.db.models.functions import Now, ExtractYear
 
 from .category import Category
 from .genre import Genre
@@ -23,10 +24,9 @@ class Title(models.Model):
     )
     description = models.TextField('Описание')
 
-    class Meta:
-        constraints = (
-            models.CheckConstraint(
-                check=models.Q(year__gt=Now()),
-                name="year_cannot_be_bigger_then_current"
-            ),
-        )
+    #class Meta:
+        #constraints = (
+        #    models.CheckConstraint('"YEAR" > strftime("%Y",CURRENT_TIMESTAMP)',
+        #        name="year_cannot_be_bigger_then_current"
+        #    ),
+        #)

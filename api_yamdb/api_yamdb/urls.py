@@ -7,8 +7,7 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from api.users.views import UserViewSet
-from .views import CommentViewSet, ReviewViewSet
-from .views import CommentViewSetAuthor, ReviewViewSet, TitleViewSet
+from .views import CommentViewSet, ReviewViewSet, TitleViewSet
 
 api_router_v1 = DefaultRouter()
 api_router_v1.register(

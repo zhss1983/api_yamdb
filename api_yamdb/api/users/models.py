@@ -5,13 +5,17 @@ from .managers import CustomUserManager
 
 class User(AbstractUser):
     ACCESS_LEVEL = (
-        ('user', 'user'),
-        ('moderator', 'moderator'),
-        ('admin', 'admin'),
+        #('user', 'user'),
+        #('moderator', 'moderator'),
+        #('admin', 'admin'),
+        ('u', 'user'),
+        ('m', 'moderator'),
+        ('a', 'admin'),
     )
     role = models.CharField(
         'Права',
-        max_length=9,
+        #max_length=9,
+        max_length=1,
         choices=ACCESS_LEVEL,
         default='user'
     )
