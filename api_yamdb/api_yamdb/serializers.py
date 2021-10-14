@@ -11,14 +11,22 @@ SCORE_VALIDATION_ERROR_MESSAGE = ('Оценка должна быть число
 
 class CommentAuthorSerializer(ModelSerializer):
     class Meta:
-        fields = '__all__'
+        fields = ['id', 'text', 'author', 'pub_date']
         model = Comment
+        read_only_fields = ('author', )
 
 
 class ReviewSerializer(ModelSerializer):
     class Meta:
         fields = ['id', 'text', 'author', 'score', 'pub_date']
         model = Review
+        read_only_fields = ('author', )
+
+    def validate_score(self, value):
+        if not (isinstance(value, int) and 0 <= value <= 10):
+            raise ValidationError(SCORE_VALIDATION_ERROR_MESSAGE)
+        return value
+
 
 <<<<<<< Updated upstream
 class TitleSerializer(ModelSerializer):
@@ -26,6 +34,7 @@ class TitleSerializer(ModelSerializer):
         fields = '__all__'
         model = Title
 
+<<<<<<< HEAD
 =======
 >>>>>>> Stashed changes
     def validate_score(self, value):
@@ -37,3 +46,8 @@ class TitleSerializer(ModelSerializer):
     class Meta:
         fields = '__all__'
         model = Title
+=======
+    # Добавить расчёт средней оценки.
+    # Добавить кэш на данное поле или данную таблицу.
+    # Добавить создание сопутствующих записей при их наличии.
+>>>>>>> zhss

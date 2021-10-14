@@ -6,7 +6,7 @@ from django.views.generic import TemplateView
 from rest_framework.routers import DefaultRouter
 
 from users.views import UserViewSet
-from .views import CommentViewSetAuthor, ReviewViewSet
+from .views import CommentViewSet, ReviewViewSet
 
 api_router_v1 = DefaultRouter()
 api_router_v1.register(
@@ -16,7 +16,7 @@ api_router_v1.register(
 )
 api_router_v1.register(
     r'titles/(?P<title_id>\d+)/reviews/(?P<review_id>\d+)/comments',
-    CommentViewSetAuthor,
+    CommentViewSet,
     basename='comments'
 )
 

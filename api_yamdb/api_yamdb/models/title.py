@@ -18,3 +18,4 @@ class Title(models.Model):
         on_delete=models.PROTECT,
         related_name='category',
     )
+    description = models.TextField('Описание')
