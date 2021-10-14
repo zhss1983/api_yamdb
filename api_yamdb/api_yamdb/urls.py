@@ -6,7 +6,7 @@ from django.views.generic import TemplateView
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from .views import CommentViewSetAuthor, ReviewViewSet
+from .views import CommentViewSetAuthor, ReviewViewSet, TitleViewSet
 
 api_router_v1 = DefaultRouter()
 api_router_v1.register(
@@ -19,6 +19,11 @@ api_router_v1.register(
     CommentViewSetAuthor,
     basename='comments'
 )  # r'posts/(?P<post_id>\d+)/
+api_router_v1.register(
+    'titles',
+    TitleViewSet,
+    basename='titles'
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

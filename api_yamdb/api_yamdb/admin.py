@@ -2,7 +2,7 @@ from django import forms
 
 from django.contrib import admin
 
-from .models import Category, Comment, Genre, Review, Titles, User
+from .models import Category, Comment, Genre, Review, Title, User
 
 EMPTY = '-пусто-'
 
@@ -59,5 +59,5 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Genre, GenreAdmin)
 admin.site.register(Review, ReviewAdmin)
-admin.site.register(Titles, TitlesAdmin)
+admin.site.register(Title, TitlesAdmin)
 admin.site.register(User, UsersAdmin)

@@ -1,3 +1,4 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from rest_framework.mixins import CreateModelMixin, ListModelMixin
 from rest_framework.pagination import LimitOffsetPagination
@@ -25,7 +26,7 @@ class ReviewViewSet(ModelViewSet):
 
     def __get_title(self):
         title_id = self.kwargs.get('title_id')
-        return get_object_or_404(Titles, pk=title_id)
+        return get_object_or_404(Title, pk=title_id)
 
     def perform_create(self, serializer):
         title = self.__get_title()
@@ -35,3 +36,12 @@ class ReviewViewSet(ModelViewSet):
     def get_queryset(self):
         title = self.__get_title()
         return title.reviews
+
+
+class TitleViewSet(ModelViewSet):
+    queryset = Title.objects.all()
+    serializer_class = TitleSerializer
+    permission_classes = (AllowAny,)
+    pagination_class = LimitOffsetPagination
+    filter_backends = (DjangoFilterBackend,)
+    filterset_fields = ('category', 'genre', 'name', 'year')
