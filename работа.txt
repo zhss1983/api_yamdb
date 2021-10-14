@@ -57,3 +57,21 @@ https://yandex-students.slack.com/files/U01TVFTS77C/F02FP5B3QJW/colaborate_webin
 	- author
 	- pub_date
 
+
+
+Заполнение таблицы данными	12	Завершено		
+Заполнение таблицы данными	12	Завершено		
+AUTH	14-15	В разработке		
+CATEGORIES	14-15	В разработке		
+GENRES	14-15	В разработке		
+TITLES	13-14	В разработке		
+REVIEWS	13-14	В разработке		
+COMMENTS	13-14	В разработке		
+USERS	13	На стадии завершения		
+				
+16-17 число на допиливание всех нестыковок и косяков, на прохождение тестов.				
+начиная с 18 числа по плану от 3 до 5 ревью.				
+
+
+SELECT title_id, AVG(score) as average FROM api_yamdb_review GROUP BY title_id;
+SELECT AVG(score) as average FROM api_yamdb_review WHERE title_id == 17;
