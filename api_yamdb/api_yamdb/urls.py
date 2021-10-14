@@ -4,9 +4,8 @@ from django.urls import include
 from django.views.generic import TemplateView
 
 from rest_framework.routers import DefaultRouter
-from rest_framework_simplejwt.views import TokenObtainPairView
 
-from api.users.views import UserViewSet
+from api.users.views import MyTokenObtainPairView, UserViewSet
 from .views import CommentViewSet, ReviewViewSet, TitleViewSet
 
 api_router_v1 = DefaultRouter()
@@ -46,6 +45,6 @@ urlpatterns = [
 #    path('user/<str:username>/<int:post_id>/edit/',
 #         views.post_edit,
 #         name='post_edit'),
+    path('api/v1/auth/token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),  # Временно
     path('api/v1/', include(api_router_v1.urls)),
-
  ]

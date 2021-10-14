@@ -21,6 +21,19 @@ from api.users.models import User, UserCSRF
 from .permissions import IsAdmin, AnyPost
 from .serializers import UserSerializer, AuthSignup
 
+from django.shortcuts import get_object_or_404
+
+from rest_framework import filters, viewsets
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+from api.users.models import User
+from .permissions import IsAdmin
+from .serializers import MyTokenObtainPairSerializer, UserSerializer
+
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
+
 
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
@@ -29,6 +42,29 @@ class UserViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter,)
     search_fields = ('=username',)
     lookup_field = 'username'
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        obj = get_object_or_404(queryset)
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+    def get_queryset(self):
+        if self.kwargs['username'] == 'me':
+            queryset = User.objects.filter(id=self.request.user.id)
+            return queryset
+        return User.objects.all()
+
+    # Прописать разрешения прав для не администраторов
+
+    # def get_permissions(self):
+    #     if (self.action == 'retrieve' and
+    #             self.kwargs['username'] == 'me'):
+    #         print('retrieve', self.kwargs)
+    #     if (self.action == 'partial_update' and
+    #             self.kwargs['username'] == 'me'):
+    #         print('partial_update', self.kwargs)
+    #     return super().get_permissions()
 
 class AuthSignupViewSet(viewsets.ViewSet):
     serializer_class = AuthSignup
@@ -83,3 +119,4 @@ def user_csrf(request):
     }
 
     return JsonResponse('На ваш адрес было отправлено письмо с кодом подтверждения')
+
