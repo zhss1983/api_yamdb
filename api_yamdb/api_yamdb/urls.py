@@ -8,6 +8,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 from api.users.views import UserViewSet
 from .views import CommentViewSet, ReviewViewSet
+from .views import CommentViewSetAuthor, ReviewViewSet, TitleViewSet
 
 api_router_v1 = DefaultRouter()
 api_router_v1.register(
@@ -25,6 +26,11 @@ api_router_v1.register(
     'users',
     UserViewSet,
     basename='users'
+)  # r'posts/(?P<post_id>\d+)/
+api_router_v1.register(
+    'titles',
+    TitleViewSet,
+    basename='titles'
 )
 
 urlpatterns = [

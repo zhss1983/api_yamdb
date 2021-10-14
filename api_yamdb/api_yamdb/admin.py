@@ -3,6 +3,7 @@ from django.contrib import admin
 from api.users.models import User
 
 from .models import Category, Comment, Genre, Review, Title
+from .models import Category, Comment, Genre, Review, Title, User
 
 EMPTY = '-пусто-'
 
