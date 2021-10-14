@@ -3,6 +3,8 @@ from api.users.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
+    role = serializers.CharField(source='get_role_display')
+
     class Meta:
         model = User
         fields = (
@@ -13,3 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
             'bio',
             'role',
         )
+
+    def validate_role(self, value):
+        return value[0]
+
