@@ -20,12 +20,20 @@ class ReviewSerializer(ModelSerializer):
         fields = ['id', 'text', 'author', 'score', 'pub_date']
         model = Review
 
+<<<<<<< Updated upstream
 class TitleSerializer(ModelSerializer):
     class Meta:
         fields = '__all__'
         model = Title
 
+=======
+>>>>>>> Stashed changes
     def validate_score(self, value):
         if not (isinstance(value, int) and 0 <= value <= 10):
             raise ValidationError(SCORE_VALIDATION_ERROR_MESSAGE)
         return value
+
+class TitleSerializer(ModelSerializer):
+    class Meta:
+        fields = '__all__'
+        model = Title
