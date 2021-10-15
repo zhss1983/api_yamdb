@@ -44,7 +44,6 @@ class ReviewViewSet(GetTitleBaseViewSet):
         title = self.get_title()
         return title.reviews.all()
 
-
 class CommentViewSet(GetReviewBaseViewSet):
     serializer_class = CommentSerializer
 
