@@ -10,8 +10,8 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, SAFE_METHODS, 
 from django.shortcuts import get_object_or_404
 
 from .permissions import EditAccessOrReadOnly
-from .models import Title, Review
-from .serializers import CommentSerializer, ReviewSerializer, TitleSerializer
+from .models import Title, Review, Genre, Category
+from .serializers import CategorySerializer, CommentSerializer, GenreSerializer, ReviewSerializer, TitleSerializer
 
 
 class GetTitleBaseViewSet(ModelViewSet):
@@ -65,3 +65,17 @@ class TitleViewSet(ModelViewSet):
     pagination_class = LimitOffsetPagination
     filter_backends = (DjangoFilterBackend,)
     filterset_fields = ('category', 'genre', 'name', 'year')
+
+
+class GenreViewSet(ModelViewSet):
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
+    permission_classes = (AllowAny,)
+    pagination_class = LimitOffsetPagination
+
+
+class CategoryViewSet(ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = (AllowAny,)
+    pagination_class = LimitOffsetPagination
