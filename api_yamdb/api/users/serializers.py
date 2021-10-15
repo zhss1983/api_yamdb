@@ -34,3 +34,8 @@ class UserSerializer(serializers.ModelSerializer):
             'bio',
             'role',
         )
+
+class AuthSignup(serializers.Serializer):
+    email = serializers.EmailField()
+    usernsme = serializers.CharField()
+

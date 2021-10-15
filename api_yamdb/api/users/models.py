@@ -33,3 +33,27 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+
+class UserCSRF(models.Model):
+    username = models.CharField(
+        verbose_name='Пользователь',
+        max_length=100
+    )
+    token = models.TextField(
+        blank=True,
+        max_length=32,
+        verbose_name='CSRF ключ',
+        help_text=('Ключ для регистрации telegram пользователя (клиента) на '
+                   'сайте.'),
+    )
+    date = models.BigIntegerField(
+        verbose_name='срок годности CSRF',
+        default=0,
+    )
+
+    class Meta:
+        verbose_name = 'CSRF token'
+
+    def __str__(self):
+        return str(self.token)

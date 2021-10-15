@@ -32,6 +32,7 @@ api_router_v1.register(
     basename='titles'
 )
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path(
@@ -40,6 +41,11 @@ urlpatterns = [
         name='redoc'
     ),
     path('api/v1/auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # Временно
+    path('api/v1/auth/', include('api.users.urls')),
+#    path('/signup/', views.post_edit, name='post_edit')
+#    path('user/<str:username>/<int:post_id>/edit/',
+#         views.post_edit,
+#         name='post_edit'),
     path('api/v1/', include(api_router_v1.urls)),
 
  ]
