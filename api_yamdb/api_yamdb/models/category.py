@@ -1,5 +1,3 @@
-from django.template.defaultfilters import slugify
-
 from django.db import models
 
 

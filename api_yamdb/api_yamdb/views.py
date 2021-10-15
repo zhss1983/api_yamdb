@@ -72,6 +72,7 @@ class GenreViewSet(ModelViewSet):
     serializer_class = GenreSerializer
     permission_classes = (AllowAny,)
     pagination_class = LimitOffsetPagination
+    lookup_field = 'slug'
 
 
 class CategoryViewSet(ModelViewSet):
@@ -81,3 +82,4 @@ class CategoryViewSet(ModelViewSet):
     pagination_class = LimitOffsetPagination
     filter_backends =(filters.SearchFilter,)
     search_fields = ('^name',)
+    lookup_field = 'slug'

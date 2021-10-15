@@ -23,12 +23,20 @@ class GenreSerializer(ModelSerializer):
     class Meta:
         fields = ['name', 'slug']
         model = Genre
+        lookup_field = 'slug'
+        extra_kwargs = {
+            'url': {'lookup_field': 'slug'}
+        }
 
 
 class CategorySerializer(ModelSerializer):
     class Meta:
         fields = ['name', 'slug']
         model = Category
+        lookup_field = 'slug'
+        extra_kwargs = {
+            'url': {'lookup_field': 'slug'}
+        }
 
 
 class ReviewSerializer(ModelSerializer):
