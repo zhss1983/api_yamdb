@@ -65,8 +65,8 @@ class TitleViewSet(ModelViewSet):
     serializer_class = TitleSerializer
     permission_classes = (AdminOrReadOnly,)
     pagination_class = LimitOffsetPagination
-    filter_backends = (DjangoFilterBackend,)
-    filterset_fields = ('category', 'genre', 'name', 'year')
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['category__slug', 'genre__slug', 'name', 'year']
 
 
 class GenreViewSet(
@@ -84,9 +84,7 @@ class GenreViewSet(
         IsAuthenticatedOrReadOnly,
     )
     pagination_class = LimitOffsetPagination
-    pagination_class = LimitOffsetPagination
     lookup_field = 'slug'
-
 
 class CategoryViewSet(
                    mixins.CreateModelMixin,

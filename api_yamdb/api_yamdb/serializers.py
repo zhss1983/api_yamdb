@@ -65,12 +65,12 @@ class TitleSerializer(ModelSerializer):
         rating = obj.reviews.aggregate(Avg('score')).get('score__avg')
         if rating:
             return round(rating, 2)
-        return 'Оценки пока нет'
+        return None
 
     def create(self, validated_data):
-        genres = self.initial_data.pop('genre')
+        genres = self.initial_data.getlist('genre')
         genres_list = tuple(get_object_or_404(Genre, slug=genre) for genre in genres)
-        category = get_object_or_404(Category, slug=self.initial_data.pop('category'))
+        category = get_object_or_404(Category, slug=self.initial_data.get('category'))
         title = Title.objects.create(**validated_data, category=category)
         for genre in genres_list:
             Genre_Title.objects.get_or_create(title=title, genre=genre)

@@ -40,7 +40,7 @@ api_router_v1.register(
     basename='categories'
 )
 
-print(api_router_v1.urls)
+print(*api_router_v1.urls, sep='\n')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
