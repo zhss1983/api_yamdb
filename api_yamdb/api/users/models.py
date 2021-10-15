@@ -11,6 +11,10 @@ ACCESS_LEVEL = (
 
 
 class User(AbstractUser):
+    """Кастомная модель пользователя
+    с доплнительными полями 'role'
+    и 'bio'.
+    """
     role = models.CharField(
         'Права',
         max_length=1,
@@ -23,6 +27,9 @@ class User(AbstractUser):
     )
     email = models.EmailField(unique=True)
 
+    # Необходимо для того, чтобы при создании
+    # пользователя через консоль, запрашивался
+    # email
     REQUIRED_FIELDS = ['email']
 
     objects = CustomUserManager()
