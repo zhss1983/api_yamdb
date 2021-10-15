@@ -1,17 +1,15 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
-from rest_framework.mixins import CreateModelMixin, ListModelMixin
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.viewsets import GenericViewSet, ModelViewSet, ReadOnlyModelViewSet
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, SAFE_METHODS, BasePermission, AllowAny
+from rest_framework.viewsets import GenericViewSet, ModelViewSet
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from rest_framework import generics, mixins, views
 
 from django.shortcuts import get_object_or_404
 
-from .permissions import EditAccessOrReadOnly, AdminOrReadOnly, GetPostDeleteMethod
+from .permissions import EditAccessOrReadOnly, AdminOrReadOnly
 from .models import Title, Review, Genre, Category
 from .serializers import CategorySerializer, CommentSerializer, GenreSerializer, ReviewSerializer, TitleSerializer
 
@@ -71,8 +69,6 @@ class TitleViewSet(ModelViewSet):
 
 class GenreViewSet(
                    mixins.CreateModelMixin,
-#                   mixins.RetrieveModelMixin,
-#                   mixins.UpdateModelMixin,
                    mixins.DestroyModelMixin,
                    mixins.ListModelMixin,
                    GenericViewSet):
@@ -80,7 +76,6 @@ class GenreViewSet(
     serializer_class = GenreSerializer
     permission_classes = (
         AdminOrReadOnly,
-#        GetPostDeleteMethod,
         IsAuthenticatedOrReadOnly,
     )
     pagination_class = LimitOffsetPagination
@@ -88,8 +83,6 @@ class GenreViewSet(
 
 class CategoryViewSet(
                    mixins.CreateModelMixin,
-#                   mixins.RetrieveModelMixin,
-#                   mixins.UpdateModelMixin,
                    mixins.DestroyModelMixin,
                    mixins.ListModelMixin,
                    GenericViewSet):
@@ -97,7 +90,6 @@ class CategoryViewSet(
     serializer_class = CategorySerializer
     permission_classes = (
         AdminOrReadOnly,
-#        GetPostDeleteMethod,
         IsAuthenticatedOrReadOnly,
     )
     pagination_class = LimitOffsetPagination

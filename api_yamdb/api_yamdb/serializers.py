@@ -1,9 +1,6 @@
 from rest_framework import serializers
-from django.db.models import fields
 from rest_framework.exceptions import ValidationError
-from rest_framework.serializers import (
-    CurrentUserDefault, ModelSerializer, SlugRelatedField)
-from rest_framework.validators import UniqueTogetherValidator
+from rest_framework.serializers import ModelSerializer
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 
@@ -59,7 +56,6 @@ class TitleSerializer(ModelSerializer):
     class Meta:
         model = Title
         fields = ('id', 'name', 'year', 'description', 'rating', 'genre', 'category')
-        #read_only_fields = ('rating', 'category', 'genre') # Не работет
 
     def get_rating(self, obj):
         rating = obj.reviews.aggregate(Avg('score')).get('score__avg')
