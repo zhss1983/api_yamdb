@@ -6,7 +6,7 @@ from django.views.generic import TemplateView
 from rest_framework.routers import DefaultRouter
 
 from api.users.views import MyTokenObtainPairView, UserViewSet
-from .views import CommentViewSet, ReviewViewSet, TitleViewSet
+from .views import CategoryViewSet, CommentViewSet, GenreViewSet, ReviewViewSet, TitleViewSet
 
 api_router_v1 = DefaultRouter()
 api_router_v1.register(
@@ -29,6 +29,16 @@ api_router_v1.register(
     'titles',
     TitleViewSet,
     basename='titles'
+)
+api_router_v1.register(
+    'genres',
+    GenreViewSet,
+    basename='genres'
+)
+api_router_v1.register(
+    'categories',
+    CategoryViewSet,
+    basename='categories'
 )
 
 urlpatterns = [
