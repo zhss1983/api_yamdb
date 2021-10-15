@@ -1,4 +1,6 @@
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, SAFE_METHODS, BasePermission, AllowAny
+from django.contrib.auth.models import AnonymousUser
+
 
 class EditAccessOrReadOnly(IsAuthenticatedOrReadOnly):
     """
@@ -7,17 +9,28 @@ class EditAccessOrReadOnly(IsAuthenticatedOrReadOnly):
     """
 
     def has_object_permission(self, request, view, obj):
-        return (
-            obj.author == request.user or
+        return (request.user and
+                (obj.author == request.user or
             request.user.is_staff or
-            request.user.role in ('moderator', 'admin')
+            request.user.role in ('moderator', 'admin'))
         )
 
-class AdminOrReadOnly(IsAuthenticatedOrReadOnly):
+
+class AdminOrReadOnly(BasePermission):
     """Object-level permission to only allow administrator."""
 
-    def has_object_permission(self, request, view, obj):
-        return request.user.is_staff or request.user.role == 'admin'
+    def has_permission(self, request, view):
+        a1 = request.method in SAFE_METHODS
+        a2 = request.user and request.user.is_authenticated and (request.user.is_staff or request.user.role == 'admin')
+        rez = a1 or a2
+
+        return rez
+
+
+
+#    def has_object_permission(self, request, view, obj):
+#        return request.user.is_staff or request.user.role == 'admin'
+
 
 class GetPostDeleteMethod(BasePermission):
 

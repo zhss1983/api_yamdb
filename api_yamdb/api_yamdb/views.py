@@ -80,7 +80,8 @@ class GenreViewSet(
     serializer_class = GenreSerializer
     permission_classes = (
         AdminOrReadOnly,
-        #        GetPostDeleteMethod
+#        GetPostDeleteMethod,
+        IsAuthenticatedOrReadOnly,
     )
     pagination_class = LimitOffsetPagination
     pagination_class = LimitOffsetPagination
@@ -98,7 +99,8 @@ class CategoryViewSet(
     serializer_class = CategorySerializer
     permission_classes = (
         AdminOrReadOnly,
-#        GetPostDeleteMethod
+#        GetPostDeleteMethod,
+        IsAuthenticatedOrReadOnly,
     )
     pagination_class = LimitOffsetPagination
     filter_backends =(filters.SearchFilter,)
