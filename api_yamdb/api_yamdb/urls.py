@@ -38,7 +38,7 @@ urlpatterns = [
         TemplateView.as_view(template_name='redoc.html'),
         name='redoc'
     ),
-    path('api/v1/auth/token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),  # Временно
+    path('api/v1/auth/token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/v1/', include(api_router_v1.urls)),
 
  ]

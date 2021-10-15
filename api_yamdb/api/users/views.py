@@ -1,6 +1,4 @@
-from django.shortcuts import get_object_or_404
-
-from rest_framework import filters, viewsets
+from rest_framework import filters, permissions, viewsets
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from api.users.models import User
@@ -14,31 +12,31 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
-    queryset = User.objects.all()
     permission_classes = (IsAdmin,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('=username',)
     lookup_field = 'username'
+    queryset = User.objects.all()
 
     def get_object(self):
-        queryset = self.get_queryset()
-        obj = get_object_or_404(queryset)
-        self.check_object_permissions(self.request, obj)
-        return obj
-
-    def get_queryset(self):
+        """Если пользователь обращается к эндпойнту
+        api/v1/users/me/ выводим информацию
+        о пользователе, сделавшем запрос."""
         if self.kwargs['username'] == 'me':
-            queryset = User.objects.filter(id=self.request.user.id)
-            return queryset
-        return User.objects.all()
+            obj = self.request.user
+            self.check_object_permissions(self.request, obj)
+            return obj
+        return super().get_object()
 
-    # Прописать разрешения прав для не администраторов
-
-    # def get_permissions(self):
-    #     if (self.action == 'retrieve' and
-    #             self.kwargs['username'] == 'me'):
-    #         print('retrieve', self.kwargs)
-    #     if (self.action == 'partial_update' and
-    #             self.kwargs['username'] == 'me'):
-    #         print('partial_update', self.kwargs)
-    #     return super().get_permissions()
+    def get_permissions(self):
+        """Если пользователь обращается к эндпойнту
+        api/v1/users/me/ даём разрешение на получение
+        информации и полное и частичное обновление
+        информации о себе.
+        """
+        if ((self.action == 'retrieve') or
+                (self.action == 'partial_update') or
+                (self.action == 'update') and
+                self.kwargs['username'] == 'me'):
+            return (permissions.IsAuthenticated(),)
+        return super().get_permissions()
