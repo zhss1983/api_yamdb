@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, SAFE_METHODS, 
 
 from django.shortcuts import get_object_or_404
 
-from .permissions import EditAccessOrReadOnly
+from .permissions import EditAccessOrReadOnly, AdminOrReadOnly, GetPostDeleteMethod
 from .models import Title, Review, Genre, Category
 from .serializers import CategorySerializer, CommentSerializer, GenreSerializer, ReviewSerializer, TitleSerializer
 
@@ -61,7 +61,7 @@ class CommentViewSet(GetReviewBaseViewSet):
 class TitleViewSet(ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleSerializer
-    permission_classes = (AllowAny,)
+    permission_classes = (AdminOrReadOnly,)
     pagination_class = LimitOffsetPagination
     filter_backends = (DjangoFilterBackend,)
     filterset_fields = ('category', 'genre', 'name', 'year')
@@ -70,7 +70,7 @@ class TitleViewSet(ModelViewSet):
 class GenreViewSet(ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    permission_classes = (AllowAny,)
+    permission_classes = (AdminOrReadOnly, GetPostDeleteMethod)
     pagination_class = LimitOffsetPagination
     lookup_field = 'slug'
 
@@ -78,7 +78,7 @@ class GenreViewSet(ModelViewSet):
 class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = (AllowAny,)
+    permission_classes = (AdminOrReadOnly, GetPostDeleteMethod)
     pagination_class = LimitOffsetPagination
     filter_backends =(filters.SearchFilter,)
     search_fields = ('^name',)
