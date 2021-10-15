@@ -50,5 +50,4 @@ urlpatterns = [
     ),
     path('api/v1/auth/token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/v1/', include(api_router_v1.urls)),
-
- ]
+]
