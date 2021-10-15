@@ -23,3 +23,6 @@ class GetPostDeleteMethod(BasePermission):
 
     def has_permission(self, request, view):
         return request.method in ('GET', 'POST', 'DELETE')
+
+    def has_object_permission(self, request, view, obj):
+        return request.method in ('GET', 'POST', 'DELETE')

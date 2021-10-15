@@ -7,6 +7,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.viewsets import GenericViewSet, ModelViewSet, ReadOnlyModelViewSet
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, SAFE_METHODS, BasePermission, AllowAny
 
+from rest_framework import generics, mixins, views
+
 from django.shortcuts import get_object_or_404
 
 from .permissions import EditAccessOrReadOnly, AdminOrReadOnly, GetPostDeleteMethod
@@ -67,18 +69,37 @@ class TitleViewSet(ModelViewSet):
     filterset_fields = ('category', 'genre', 'name', 'year')
 
 
-class GenreViewSet(ModelViewSet):
+class GenreViewSet(
+                   mixins.CreateModelMixin,
+#                   mixins.RetrieveModelMixin,
+#                   mixins.UpdateModelMixin,
+                   mixins.DestroyModelMixin,
+                   mixins.ListModelMixin,
+                   GenericViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    permission_classes = (AdminOrReadOnly, GetPostDeleteMethod)
+    permission_classes = (
+        AdminOrReadOnly,
+        #        GetPostDeleteMethod
+    )
+    pagination_class = LimitOffsetPagination
     pagination_class = LimitOffsetPagination
     lookup_field = 'slug'
 
 
-class CategoryViewSet(ModelViewSet):
+class CategoryViewSet(
+                   mixins.CreateModelMixin,
+#                   mixins.RetrieveModelMixin,
+#                   mixins.UpdateModelMixin,
+                   mixins.DestroyModelMixin,
+                   mixins.ListModelMixin,
+                   GenericViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = (AdminOrReadOnly, GetPostDeleteMethod)
+    permission_classes = (
+        AdminOrReadOnly,
+#        GetPostDeleteMethod
+    )
     pagination_class = LimitOffsetPagination
     filter_backends =(filters.SearchFilter,)
     search_fields = ('^name',)
