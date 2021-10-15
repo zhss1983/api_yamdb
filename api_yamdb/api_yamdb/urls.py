@@ -19,7 +19,6 @@ api_router_v1.register(
     CommentViewSet,
     basename='comments'
 )
-
 api_router_v1.register(
     'users',
     UserViewSet,
