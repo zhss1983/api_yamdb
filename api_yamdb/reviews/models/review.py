@@ -32,10 +32,6 @@ class Review(models.Model):
                 fields=('title', 'author'),
                 name='unique_title_author',
             ),
-            models.CheckConstraint(
-                check=~models.Q(author=models.F('title')),
-                name='name_not_title',
-            )
         )
 
 
