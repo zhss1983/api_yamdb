@@ -3,13 +3,13 @@ from rest_framework import filters
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 
 from rest_framework import generics, mixins, views
 
 from django.shortcuts import get_object_or_404
 
-from .permissions import EditAccessOrReadOnly, AdminOrReadOnly
+from .permissions import EditAccessOrReadOnly, AdminOrReadOnly, AdminOrModeratorOrReadOnly
 from .models import Title, Review, Genre, Category
 from .serializers import CategorySerializer, CommentSerializer, GenreSerializer, ReviewSerializer, TitleSerializer
 
@@ -61,7 +61,12 @@ class CommentViewSet(GetReviewBaseViewSet):
 class TitleViewSet(ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleSerializer
-    permission_classes = (AdminOrReadOnly,)
+    permission_classes = (
+        AdminOrReadOnly,
+#        AllowAny,
+#        EditAccessOrReadOnly,
+#        AdminOrModeratorOrReadOnly,
+    )
     pagination_class = LimitOffsetPagination
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['category__slug', 'genre__slug', 'name', 'year']
@@ -79,7 +84,7 @@ class GenreViewSet(
         IsAuthenticatedOrReadOnly,
     )
     pagination_class = LimitOffsetPagination
-    filter_backends =(filters.SearchFilter,)
+    filter_backends = (filters.SearchFilter,)
     search_fields = ('^name',)
     lookup_field = 'slug'
 
