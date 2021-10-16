@@ -123,7 +123,10 @@ class TitleSerializer(ModelSerializer):
             Category, slug=self.initial_data.get('category'))
 
     def create(self, validated_data):
-        genres = self.initial_data.getlist('genre')
+        try:
+            genres = self.initial_data.getlist('genre')
+        except:
+            genres = self.initial_data.get('genre')
         genres_list = tuple(
             get_object_or_404(Genre, slug=genre) for genre in genres)
         instance = Title.objects.create(
@@ -133,7 +136,10 @@ class TitleSerializer(ModelSerializer):
         return instance
 
     def update(self, instance, validated_data):
-        genres = self.initial_data.getlist('genre')
+        try:
+            genres = self.initial_data.getlist('genre')
+        except:
+            genres = self.initial_data.get('genre')
         genres_list = tuple(
             get_object_or_404(Genre, slug=genre) for genre in genres)
         instance.category = self.category_getting()
