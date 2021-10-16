@@ -76,12 +76,12 @@ class TitleViewSet(ModelViewSet):
         class Meta:
             model = Title
             fields = ['category', 'genre', 'year', 'name']
-            fields = {
-                'category': ['exact'],
-                'genre': ['exact'],
-                'year': ['exact'],
-                'name': ['icontains']
-            }
+#            fields = {
+#                'category': ['exact'],
+#                'genre': ['exact'],
+#                'year': ['exact'],
+#                'name': ['icontains']
+#            }
         def name_filter(self, queryset, name, name_start):
             return  queryset.filter(name__startswith=name_start)
     filterset_class = TitleFilter
