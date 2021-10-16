@@ -127,7 +127,13 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10
 }
 
+# Simple JWT (token generator) settings
+
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
+
+#  Email setttings
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')

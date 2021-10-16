@@ -1,8 +1,23 @@
+from random import choice
+
+from django.core.mail import send_mail
+
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from api.users.models import Code, User
+
+
+def c_code_generate():
+    """
+    Генерирует случайную комбинацию букв и цифр
+    :return: confirmation_code
+    """
+    letters = ('abcdefghijkmnopqrstuvwxyz'
+               'ABCDEFGHJKLMNOPQRSTUVWXYZ0123456789')
+    code = ''.join([choice(letters) for _ in range(30)])
+    return code
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -18,13 +33,20 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         self.fields[self.username_field] = serializers.CharField()
         del self.fields['password']
 
+    # Добавляем новое обязательное поле
+    confirmation_code = serializers.CharField(max_length=30,
+                                              required=True)
+
     @classmethod
     def get_token(cls, user):
         return RefreshToken.for_user(user)
 
     def validate(self, attrs):
+        """Проверяет confirmation_code."""
         username = attrs['username']
         user = User.objects.get(username=username)
+        if attrs['confirmation_code'] != user.code.code:
+            raise serializers.ValidationError('Wrong confirmation code')
         refresh = self.get_token(user)
         data = {
             'refresh': str(refresh),
@@ -34,7 +56,13 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    """Сериализатор для регистрации пользователей."""
+    """Сериализатор для регистрации пользователей.
+
+    ToDo: Видимо, неправильно понял задание. Нужно
+    ToDo: возвращать код 200, а не 201.
+    ToDo: По ходу дела тут не надо создавать самого
+    ToDo: пользователя, а добавлять имеющегося
+    """
     class Meta:
         model = User
         fields = ('email', 'username')
@@ -42,22 +70,25 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         """Тестовая функция записывает тестовый код
         и дату его создания в БД.
-
-        ---
-        ToDo: Сделать отправку на email
-        ToDo: Сделать кодировку confirmation_code
         """
         username = validated_data['username']
         email = validated_data['email']
-        c_code = 'some-random-code'
-        user, _ = User.objects.get_or_create(username=username, email=email)
-        code_obj = Code.objects.get_or_create(user_id=user.id, code=c_code)
+        c_code = c_code_generate()
+        user, _ = User.objects.get_or_create(
+            username=username, email=email)
+        Code.objects.get_or_create(
+            user_id=user.id, code=c_code)
+        send_mail(
+            recipient_list=(user.email,),
+            from_email='site@site.com',
+            subject='Авторизация на нашем сайте',
+            message=f'Ваш код для авторизации {c_code}'
+        )
         return user
 
 
 class UserSerializer(serializers.ModelSerializer):
     """Сериализатор для модели пользователя.
-    TODO: сделать read_only для role
     """
     lookup_field = 'username'
 

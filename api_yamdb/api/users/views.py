@@ -9,7 +9,7 @@ from .serializers import (MyTokenObtainPairSerializer,
                           UserSerializer)
 
 
-class UserRegistrationViewSet(viewsets.ModelViewSet):
+class UserRegistrationViewSet(viewsets.ModelViewSet):  # Подобрать подходящий Миксин на создание
     """Вьюсет для регистрации новых пользователей."""
     serializer_class = UserRegistrationSerializer
     permission_classes = (permissions.AllowAny,)

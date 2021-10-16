@@ -31,7 +31,7 @@ api_router_v1.register(
     basename='users'
 )
 api_router_v1.register(
-    'signup',
+    'auth/signup',
     UserRegistrationViewSet,
     basename='signup'
 )
