@@ -6,6 +6,8 @@ from rest_framework.serializers import (
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 
+
+
 from .models import Category, Comment, Genre, Review, Title, Genre_Title
 
 SCORE_VALIDATION_ERROR_MESSAGE = ('Оценка должна быть числом целым в диапазоне'
@@ -101,7 +103,7 @@ class ReviewSerializer(ModelSerializer):
 class TitleSerializer(ModelSerializer):
     id = serializers.IntegerField(source='pk', required=False, read_only=True)
     genre = GenreSerializer(many=True, read_only=True)
-    category = CategorySerializer(read_only=True)
+    category = CategorySerializer(read_only=True, many=False)
     rating = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
@@ -116,27 +118,27 @@ class TitleSerializer(ModelSerializer):
             return round(rating, 2)
         return None
 
-    def category(self):
+    def category_getting(self):
         return get_object_or_404(
             Category, slug=self.initial_data.get('category'))
-
 
     def create(self, validated_data):
         genres = self.initial_data.getlist('genre')
         genres_list = tuple(
             get_object_or_404(Genre, slug=genre) for genre in genres)
         instance = Title.objects.create(
-            **validated_data, category=self.category())
+            **validated_data, category=self.category_getting())
         for genre in genres_list:
             Genre_Title.objects.get_or_create(title=instance, genre=genre)
         return instance
-
 
     def update(self, instance, validated_data):
         genres = self.initial_data.getlist('genre')
         genres_list = tuple(
             get_object_or_404(Genre, slug=genre) for genre in genres)
-        instance.category = self.category()
+        instance.category = self.category_getting()
         for genre in genres_list:
             Genre_Title.objects.get_or_create(title=instance, genre=genre)
+        instance.name = validated_data.get('name', instance.name)
+        instance.save()
         return instance
