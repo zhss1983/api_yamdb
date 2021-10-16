@@ -10,7 +10,7 @@ class EditAccessOrReadOnly(IsAuthenticatedOrReadOnly):
     def has_object_permission(self, request, view, obj):
         return (request.user and
                 (obj.author == request.user or
-            request.user.is_staff or
+            request.user.is_superuser or
             request.user.role in ('moderator', 'admin'))
         )
 
@@ -20,7 +20,7 @@ class AdminOrReadOnly(BasePermission):
 
     def has_permission(self, request, view):
         a1 = request.method in SAFE_METHODS
-        a2 = request.user and request.user.is_authenticated and (request.user.is_staff or request.user.role == 'admin')
+        a2 = request.user and request.user.is_authenticated and (request.user.is_superuser or request.user.role == 'admin')
         rez = a1 or a2
 
         return rez

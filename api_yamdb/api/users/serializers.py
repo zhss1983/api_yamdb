@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from api.users.models import User, ACCESS_LEVEL
+from api.users.models import Code, User
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -33,32 +33,32 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         return data
 
 
-class StringToSymbol(serializers.Field):
-    """Преобразовывает значение хранящееся в БД
-    в виде одного символа, в слово.
-    """
-    def to_representation(self, value):
-        for level in ACCESS_LEVEL:
-            symbol, role = level
-            if value == symbol:
-                return role
-        return value
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    """Сериализатор для регистрации пользователей."""
+    class Meta:
+        model = User
+        fields = ('email', 'username')
 
-    def to_internal_value(self, data):
-        role_list = []
-        for level in ACCESS_LEVEL:
-            role_list.append(level[1])
-        if data not in role_list:
-            raise serializers.ValidationError(
-                'No such user role'
-            )
-        data = data[:1]
-        return data
+    def create(self, validated_data):
+        """Тестовая функция записывает тестовый код
+        и дату его создания в БД.
+
+        ---
+        ToDo: Сделать отправку на email
+        ToDo: Сделать кодировку confirmation_code
+        """
+        username = validated_data['username']
+        email = validated_data['email']
+        c_code = 'some-random-code'
+        user, _ = User.objects.get_or_create(username=username, email=email)
+        code_obj = Code.objects.get_or_create(user_id=user.id, code=c_code)
+        return user
 
 
 class UserSerializer(serializers.ModelSerializer):
-    """Сериализатор для модели пользователя."""
-    role = StringToSymbol(required=False)
+    """Сериализатор для модели пользователя.
+    TODO: сделать read_only для role
+    """
     lookup_field = 'username'
 
     class Meta:
