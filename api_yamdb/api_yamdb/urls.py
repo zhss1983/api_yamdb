@@ -5,7 +5,9 @@ from django.views.generic import TemplateView
 
 from rest_framework.routers import DefaultRouter
 
-from api.users.views import MyTokenObtainPairView, UserViewSet
+from api.users.views import (MyTokenObtainPairView,
+                             UserRegistrationViewSet,
+                             UserViewSet)
 from .views import CommentViewSet, ReviewViewSet, TitleViewSet
 
 api_router_v1 = DefaultRouter()
@@ -24,7 +26,13 @@ api_router_v1.register(
     'users',
     UserViewSet,
     basename='users'
-)  # r'posts/(?P<post_id>\d+)/
+)
+api_router_v1.register(
+    'signup',
+    UserRegistrationViewSet,
+    basename='signup'
+)
+# r'posts/(?P<post_id>\d+)/
 api_router_v1.register(
     'titles',
     TitleViewSet,
@@ -38,7 +46,6 @@ urlpatterns = [
         TemplateView.as_view(template_name='redoc.html'),
         name='redoc'
     ),
-    path('api/v1/auth/token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/v1/auth/token/',  MyTokenObtainPairView.as_view(), name='token_obtain_pair' ),
     path('api/v1/', include(api_router_v1.urls)),
-
  ]

@@ -4,7 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class CustomUserManager(BaseUserManager):
     """В методе create_superuser() присваиваем
-    дефолное значение поля 'role' = 'a', 'admin'.
+    дефолное значение поля 'role' = 'admin'.
     """
     def create_user(self, email, password, **extra_fields):
         if not email:
@@ -19,5 +19,5 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)
-        extra_fields.setdefault('role', 'a')
+        extra_fields.setdefault('role', 'admin')
         return self.create_user(email, password, **extra_fields)
