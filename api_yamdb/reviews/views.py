@@ -61,12 +61,7 @@ class CommentViewSet(GetReviewBaseViewSet):
 class TitleViewSet(ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleSerializer
-    permission_classes = (
-        AdminOrReadOnly,
-#        AllowAny,
-#        EditAccessOrReadOnly,
-#        AdminOrModeratorOrReadOnly,
-    )
+    permission_classes = (AdminOrReadOnly,)
     pagination_class = LimitOffsetPagination
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['category__slug', 'genre__slug', 'name', 'year']
