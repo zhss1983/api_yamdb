@@ -17,7 +17,8 @@ class GetTitle:
 
     def __call__(self, serializer_field):
         title_id = serializer_field.context['view'].kwargs.get('title_id')
-        return get_object_or_404(Title, pk=title_id)
+        title = get_object_or_404(Title, pk=title_id)
+        return title
 #        return serializer_field.context['request'].user
 
     def __repr__(self):
@@ -27,9 +28,10 @@ class GetReview:
     requires_context = True
 
     def __call__(self, serializer_field):
+        title = GetTitle()(serializer_field)
         review_id = serializer_field.context['view'].kwargs.get('review_id')
         rew = get_object_or_404(
-            GetTitle().reviews, pk=review_id)
+            title.reviews, pk=review_id)
         return rew
 
 #        return serializer_field.context['request'].user
@@ -44,13 +46,13 @@ class GetReview:
 
 
 class CommentSerializer(ModelSerializer):
-    #review = serializers.HiddenField(default=GetTitle())
+    review = serializers.HiddenField(default=GetReview())
     author = SlugRelatedField(
         slug_field='username', read_only=True, default=CurrentUserDefault())
 
     class Meta:
-        fields = ('id', 'text', 'author', 'pub_date')
-        #fields = ('id', 'text', 'author', 'pub_date', 'review')
+        #fields = ('id', 'text', 'author', 'pub_date')
+        fields = ('id', 'text', 'author', 'pub_date', 'review')
         model = Comment
         read_only_fields = ('id', )
 
@@ -116,7 +118,7 @@ class TitleSerializer(ModelSerializer):
             return round(rating, 2)
         return None
 
-    def category(self):
+    def category_by_url(self):
         return get_object_or_404(
             Category, slug=self.initial_data.get('category'))
 
@@ -126,7 +128,7 @@ class TitleSerializer(ModelSerializer):
         genres_list = tuple(
             get_object_or_404(Genre, slug=genre) for genre in genres)
         instance = Title.objects.create(
-            **validated_data, category=self.category())
+            **validated_data, category=self.category_by_url())
         for genre in genres_list:
             Genre_Title.objects.get_or_create(title=instance, genre=genre)
         return instance
@@ -136,7 +138,7 @@ class TitleSerializer(ModelSerializer):
         genres = self.initial_data.getlist('genre')
         genres_list = tuple(
             get_object_or_404(Genre, slug=genre) for genre in genres)
-        instance.category = self.category()
+        instance.category = self.category_by_url()
         for genre in genres_list:
             Genre_Title.objects.get_or_create(title=instance, genre=genre)
         return instance

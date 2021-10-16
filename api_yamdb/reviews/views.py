@@ -50,7 +50,7 @@ class CommentViewSet(GetReviewBaseViewSet):
     def perform_create(self, serializer):
         serializer.save(
             author=self.request.user,
-            review=self.get_review()
+#            review=self.get_review()
         )
 
     def get_queryset(self):
