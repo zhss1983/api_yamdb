@@ -52,8 +52,6 @@ api_router_v1.register(
     basename='categories'
 )
 
-#print(*api_router_v1.urls, sep='\n')
-
 urlpatterns = [
     path('v1/', include(api_router_v1.urls)),
     path('v1/auth/token/', MyTokenObtainPairView.as_view(),
