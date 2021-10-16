@@ -132,6 +132,8 @@ class Test04TitleAPI:
         )
         response = admin_client.get('/api/v1/titles/?name=Поворот')
         data = response.json()
+        for d in data['results']:
+            print(d['name'])
         assert len(data['results']) == 2, (
             'Проверьте, что при GET запросе `/api/v1/titles/` фильтуется по `name` параметру названия'
         )
