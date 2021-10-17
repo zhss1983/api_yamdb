@@ -60,19 +60,16 @@ class CommentViewSet(GetReviewBaseViewSet):
 
 class TitleViewSet(ModelViewSet):
     queryset = Title.objects.all()
+
     class TitleFilter(django_filters.FilterSet):
         category = django_filters.filters.CharFilter(field_name='category__slug')
         genre = django_filters.filters.CharFilter(field_name='genre__slug')
         name = django_filters.filters.CharFilter(field_name='name', method='name_filter')
+
         class Meta:
             model = Title
             fields = ('category', 'genre', 'year', 'name')
-            fields = {
-                'category': ('exact',),
-                'genre': ('exact',),
-                'year': ('exact',),
-                'name': ('icontains',)
-            }
+
         def name_filter(self, queryset, name, name_start):
             return  queryset.filter(name__startswith=name_start)
     filterset_class = TitleFilter
