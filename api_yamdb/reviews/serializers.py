@@ -139,7 +139,7 @@ class TitleSerializer(ModelSerializer):
     def update(self, instance, validated_data):
         instance.category = self.category_getting()
         for attr, value in validated_data.items():
-            if attr not in ['category', 'genre']:
+            if attr not in ('category', 'genre'):
                 setattr(instance, attr, value)
         instance.save()
         return instance
