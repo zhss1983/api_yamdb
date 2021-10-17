@@ -30,11 +30,7 @@ api_router_v1.register(
     UserViewSet,
     basename='users'
 )
-api_router_v1.register(
-    'signup',
-    UserRegistrationViewSet,
-    basename='signup'
-)
+
 # r'posts/(?P<post_id>\d+)/
 api_router_v1.register(
     'titles',
@@ -56,4 +52,7 @@ urlpatterns = [
     path('v1/', include(api_router_v1.urls)),
     path('v1/auth/token/', MyTokenObtainPairView.as_view(),
          name='token_obtain_pair'),
+    path('v1/auth/signup/', UserRegistrationViewSet.as_view(),
+         name='token_obtain_pair'
+         ),
 ]

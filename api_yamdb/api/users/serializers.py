@@ -1,3 +1,5 @@
+from django.shortcuts import get_object_or_404
+
 from random import choice
 
 from django.core.mail import send_mail
@@ -44,7 +46,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         """Проверяет confirmation_code."""
         username = attrs['username']
-        user = User.objects.get(username=username)
+        user = get_object_or_404(User, username=username)
         if attrs['confirmation_code'] != user.code.code:
             raise serializers.ValidationError('Wrong confirmation code')
         refresh = self.get_token(user)
@@ -57,15 +59,15 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     """Сериализатор для регистрации пользователей.
-
-    ToDo: Видимо, неправильно понял задание. Нужно
-    ToDo: возвращать код 200, а не 201.
-    ToDo: По ходу дела тут не надо создавать самого
-    ToDo: пользователя, а добавлять имеющегося
     """
     class Meta:
         model = User
         fields = ('email', 'username')
+
+    def validate_username(self, value):
+        if value == 'me':
+            raise serializers.ValidationError('Имя не может быть me')
+        return value
 
     def create(self, validated_data):
         """Тестовая функция записывает тестовый код
@@ -76,6 +78,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         c_code = c_code_generate()
         user, _ = User.objects.get_or_create(
             username=username, email=email)
+        print('User is', user.username)
         Code.objects.get_or_create(
             user_id=user.id, code=c_code)
         send_mail(

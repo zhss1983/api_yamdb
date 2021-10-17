@@ -1,4 +1,5 @@
-from rest_framework import filters, permissions, status, viewsets
+
+from rest_framework import generics, filters, permissions, status, viewsets
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -9,10 +10,27 @@ from .serializers import (MyTokenObtainPairSerializer,
                           UserSerializer)
 
 
-class UserRegistrationViewSet(viewsets.ModelViewSet):  # Подобрать подходящий Миксин на создание
+class UserRegistrationViewSet(generics.CreateAPIView):
     """Вьюсет для регистрации новых пользователей."""
     serializer_class = UserRegistrationSerializer
     permission_classes = (permissions.AllowAny,)
+
+    def create(self, request, *args, **kwargs):
+        """
+        Переопределяет status code: тесты требуют, чтобы
+        было 200 ОК. Без этого переопределения возвращается
+        201.
+        --------------------------------------------------
+        Почему так - неясно, мы отправляем POST-запрос и
+        создаём новые данные (пользователя, код.)
+        --------------------------------------------------
+        """
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data,
+                        status=status.HTTP_200_OK, headers=headers)
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -56,10 +74,10 @@ class UserViewSet(viewsets.ModelViewSet):
         сервера
         -------------------------------------------
         """
-        if (((self.action == 'retrieve') or
-             (self.action == 'partial_update') or
-             (self.action == 'update') or
-             (self.action == 'destroy'))
+        if (((self.action == 'retrieve')
+             or (self.action == 'partial_update')
+             or (self.action == 'update')
+             or (self.action == 'destroy'))
                 and self.kwargs['username'] == 'me'):
             return (permissions.IsAuthenticated(),)
         return super().get_permissions()
@@ -86,8 +104,7 @@ class UserViewSet(viewsets.ModelViewSet):
         """Не даёт пользователю без прав админа поменять
         свою роль.
         """
-        if (self.request.user.role != 'admin' and
-                'role' in serializer.validated_data):
+        if (self.request.user.role != 'admin'
+                and 'role' in serializer.validated_data):
             return Response(status=status.HTTP_403_FORBIDDEN)
         serializer.save()
-
