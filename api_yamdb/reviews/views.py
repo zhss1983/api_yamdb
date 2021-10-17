@@ -65,7 +65,7 @@ class TitleViewSet(ModelViewSet):
     permission_classes = (AdminOrReadOnly,)
     serializer_class = TitleSerializer
     pagination_class = LimitOffsetPagination
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = (DjangoFilterBackend,)
 
 
 class CategoryGenreViewSet(CreateModelMixin,
