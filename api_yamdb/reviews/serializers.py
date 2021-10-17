@@ -3,6 +3,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueTogetherValidator
 from rest_framework.serializers import (
     CurrentUserDefault, ModelSerializer, SlugRelatedField)
+
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from django.http import QueryDict
@@ -11,6 +12,7 @@ from .models import Category, Comment, Genre, Review, Title, Genre_Title
 
 
 class GetDefault:
+    """Base class for get default values"""
     requires_context = True
 
     def __call__(self, serializer_field):
@@ -21,6 +23,7 @@ class GetDefault:
 
 
 class GetTitle(GetDefault):
+    """Get Title grantee from id in url or 404"""
     def __call__(self, serializer_field):
         title_id = serializer_field.context['view'].kwargs.get('title_id')
         title = get_object_or_404(Title, pk=title_id)
@@ -28,6 +31,7 @@ class GetTitle(GetDefault):
 
 
 class GetReview(GetDefault):
+    """Get Review grantee from id in url or 404"""
     def __call__(self, serializer_field):
         title = GetTitle()(serializer_field)
         review_id = serializer_field.context['view'].kwargs.get('review_id')
@@ -46,6 +50,7 @@ class CommentSerializer(ModelSerializer):
 
 
 class MetaGenreCategore:
+    """Base Meta class for GenreSerializer and CategorySerializer"""
     fields = ('name', 'slug')
     lookup_field = 'slug'
     extra_kwargs = {'url': {'lookup_field': 'slug'}}
@@ -87,9 +92,7 @@ class ReviewSerializer(ModelSerializer):
         return value
 
 
-
 class TitleSerializer(ModelSerializer):
-    id = serializers.IntegerField(source='pk', required=False, read_only=True)
     genre = GenreSerializer(many=True, read_only=True)
     category = CategorySerializer(read_only=True, many=False)
     rating = serializers.SerializerMethodField(read_only=True)
@@ -101,6 +104,7 @@ class TitleSerializer(ModelSerializer):
         read_only_fields = ('id', 'rating', 'genre', 'category')
 
     def get_rating(self, obj):
+        """Calculates the average rating based on reviews."""
         rating = obj.reviews.aggregate(Avg('score')).get('score__avg')
         if rating:
             return round(rating, 2)
@@ -108,43 +112,35 @@ class TitleSerializer(ModelSerializer):
 
 
     def category_getting(self):
+        """Category access granted or 404"""
         slug = self.initial_data.get('category')
-        category = get_object_or_404(Category, slug=slug)
-        print(category)
-        return category
+        return get_object_or_404(Category, slug=slug)
 
     def genre_save(wrapper_method):
-        def wrapper(self, var1, var2=None):
+        """Genres access granted or 404"""
+        def wrapper(self, *args):
             if isinstance(self.initial_data, QueryDict):
                 genres = self.initial_data.getlist('genre')
             else:
                 genres = self.initial_data.get('genre')
             genres_list = tuple(
                 get_object_or_404(Genre, slug=genre) for genre in genres)
-            if var2:
-                instance = wrapper_method(self, var1, var2)
-            else:
-                instance = wrapper_method(self, var1)
+            instance = wrapper_method(self, *args)
             for genre in genres_list:
                 Genre_Title.objects.get_or_create(title=instance, genre=genre)
             return instance
-
         return wrapper
 
     @genre_save
     def create(self, validated_data):
-        instance = Title.objects.create(
+        return Title.objects.create(
             **validated_data, category=self.category_getting())
-        return instance
-
 
     @genre_save
     def update(self, instance, validated_data):
         instance.category = self.category_getting()
-
         for attr, value in validated_data.items():
             if attr not in ['category', 'genre']:
                 setattr(instance, attr, value)
-
         instance.save()
         return instance

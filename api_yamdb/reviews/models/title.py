@@ -2,7 +2,6 @@ import datetime as dt
 from time import strftime
 
 from django.db import models
-from django.db.models.functions import Now, ExtractYear
 
 from .category import Category
 from .genre import Genre
@@ -15,7 +14,6 @@ class Title(models.Model):
         verbose_name='Год публикации', blank=False)
     genre = models.ManyToManyField(
         Genre, verbose_name='Жанр', through='Genre_Title')
-    # category = models.IntegerField()
     category = models.ForeignKey(
         Category,
         verbose_name='Категория',

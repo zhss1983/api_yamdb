@@ -1,11 +1,10 @@
 from django.db import models
 
-from api.users.models import User
 from .title import Title
+from api.users.models import User
 
 
 class Review(models.Model):
-    #title = models.IntegerField()
     title = models.ForeignKey(
         Title,
         verbose_name='Произведение',
@@ -13,7 +12,6 @@ class Review(models.Model):
         related_name='reviews'
     )
     text = models.TextField('Отзыв')
-    #author = models.IntegerField()
     author = models.ForeignKey(
         User,
         verbose_name='Автор',
@@ -33,7 +31,6 @@ class Review(models.Model):
                 name='unique_title_author',
             ),
         )
-
 
     def __str__(self):
         return self.text[:15]

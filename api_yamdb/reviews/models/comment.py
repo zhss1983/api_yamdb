@@ -1,11 +1,10 @@
 from django.db import models
 
-from api.users.models import User
 from .review import Review
+from api.users.models import User
 
 
 class Comment(models.Model):
-    #review = models.IntegerField()
     review = models.ForeignKey(
         Review,
         verbose_name='Отзыв',
@@ -13,7 +12,6 @@ class Comment(models.Model):
         related_name='comments'
     )
     text = models.TextField('Текст')
-    #author = models.IntegerField()
     author = models.ForeignKey(
         User,
         verbose_name='Автор',

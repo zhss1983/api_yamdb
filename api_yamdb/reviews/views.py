@@ -1,18 +1,24 @@
-import  django_filters
+from rest_framework.filters import SearchFilter
+from rest_framework.mixins import (
+    CreateModelMixin, DestroyModelMixin, ListModelMixin)
+from rest_framework.pagination import (
+    LimitOffsetPagination, PageNumberPagination)
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters
-from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
-from rest_framework import generics, mixins, views
 
 from django.shortcuts import get_object_or_404
 
 from .permissions import EditAccessOrReadOnly, AdminOrReadOnly
-from .models import Title, Review, Genre, Category
-from .serializers import CategorySerializer, CommentSerializer, GenreSerializer, ReviewSerializer, TitleSerializer
-
+from .models import Title, Genre, Category
+from .serializers import (
+    CategorySerializer,
+    CommentSerializer,
+    GenreSerializer,
+    ReviewSerializer,
+    TitleSerializer
+)
+from .filters import TitleFilter
 
 class GetTitleBaseViewSet(ModelViewSet):
     permission_classes = (EditAccessOrReadOnly,)
@@ -41,6 +47,7 @@ class ReviewViewSet(GetTitleBaseViewSet):
         title = self.get_title()
         return title.reviews.all()
 
+
 class CommentViewSet(GetReviewBaseViewSet):
     serializer_class = CommentSerializer
 
@@ -54,52 +61,28 @@ class CommentViewSet(GetReviewBaseViewSet):
 
 class TitleViewSet(ModelViewSet):
     queryset = Title.objects.all()
-
-    class TitleFilter(django_filters.FilterSet):
-        category = django_filters.filters.CharFilter(field_name='category__slug')
-        genre = django_filters.filters.CharFilter(field_name='genre__slug')
-        name = django_filters.filters.CharFilter(field_name='name', method='name_filter')
-
-        class Meta:
-            model = Title
-            fields = ('category', 'genre', 'year', 'name')
-
-        def name_filter(self, queryset, name, name_start):
-            return  queryset.filter(name__startswith=name_start)
     filterset_class = TitleFilter
-    serializer_class = TitleSerializer
     permission_classes = (AdminOrReadOnly,)
+    serializer_class = TitleSerializer
     pagination_class = LimitOffsetPagination
     filter_backends = [DjangoFilterBackend]
 
-class GenreViewSet(
-                   mixins.CreateModelMixin,
-                   mixins.DestroyModelMixin,
-                   mixins.ListModelMixin,
-                   GenericViewSet):
-    queryset = Genre.objects.all()
-    serializer_class = GenreSerializer
-    permission_classes = (
-        AdminOrReadOnly,
-        IsAuthenticatedOrReadOnly,
-    )
+
+class CategoryGenreViewSet(
+    CreateModelMixin, DestroyModelMixin, ListModelMixin, GenericViewSet):
+    """Base ViewSet class for GenreViewSet and CategoryViewSet"""
+    permission_classes = (AdminOrReadOnly, IsAuthenticatedOrReadOnly)
     pagination_class = LimitOffsetPagination
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('^name',)
+    filter_backends = (SearchFilter,)
+    search_fields = ('=name',)
     lookup_field = 'slug'
 
-class CategoryViewSet(
-                   mixins.CreateModelMixin,
-                   mixins.DestroyModelMixin,
-                   mixins.ListModelMixin,
-                   GenericViewSet):
+
+class GenreViewSet(CategoryGenreViewSet):
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
+
+
+class CategoryViewSet(CategoryGenreViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = (
-        AdminOrReadOnly,
-        IsAuthenticatedOrReadOnly,
-    )
-    pagination_class = LimitOffsetPagination
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('^name',)
-    lookup_field = 'slug'
