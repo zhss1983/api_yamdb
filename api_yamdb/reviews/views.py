@@ -5,7 +5,6 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
-
 from rest_framework import generics, mixins, views
 
 from django.shortcuts import get_object_or_404
@@ -16,7 +15,7 @@ from .serializers import CategorySerializer, CommentSerializer, GenreSerializer,
 
 
 class GetTitleBaseViewSet(ModelViewSet):
-    permission_classes = (EditAccessOrReadOnly, )
+    permission_classes = (EditAccessOrReadOnly,)
     pagination_class = PageNumberPagination
 
     def get_title(self):
@@ -59,36 +58,25 @@ class CommentViewSet(GetReviewBaseViewSet):
         return review.comments.all()
 
 
-# class MatchFilterSet(django_filters.FilterSet):
-#     genre = django_filters.CharFilter(field_name='group__slug')
-#
-#     class Meta:
-#         model = Genre
-#         fields = ['genre']
-
 class TitleViewSet(ModelViewSet):
-    # filter_class = MatchFilterSet
     queryset = Title.objects.all()
+
     class TitleFilter(django_filters.FilterSet):
         category = django_filters.filters.CharFilter(field_name='category__slug')
         genre = django_filters.filters.CharFilter(field_name='genre__slug')
         name = django_filters.filters.CharFilter(field_name='name', method='name_filter')
+
         class Meta:
             model = Title
-            fields = ['category', 'genre', 'year', 'name']
-#            fields = {
-#                'category': ['exact'],
-#                'genre': ['exact'],
-#                'year': ['exact'],
-#                'name': ['icontains']
-#            }
+            fields = ('category', 'genre', 'year', 'name')
+
         def name_filter(self, queryset, name, name_start):
             return  queryset.filter(name__startswith=name_start)
     filterset_class = TitleFilter
     serializer_class = TitleSerializer
     permission_classes = (
-        AdminOrReadOnly,
-#        AllowAny,
+        # AdminOrReadOnly,
+       AllowAny,
 #        EditAccessOrReadOnly,
 #        AdminOrModeratorOrReadOnly,
     )

@@ -24,9 +24,10 @@ class Title(models.Model):
     )
     description = models.TextField('Описание')
 
-    #class Meta:
-        #constraints = (
-        #    models.CheckConstraint('"YEAR" > strftime("%Y",CURRENT_TIMESTAMP)',
-        #        name="year_cannot_be_bigger_then_current"
-        #    ),
-        #)
+    class Meta:
+        constraints = (
+            models.CheckConstraint(
+                check=models.Q(year__lte=dt.date.today().year),
+                name="year_cannot_be_bigger_then_current"
+            ),
+        )
