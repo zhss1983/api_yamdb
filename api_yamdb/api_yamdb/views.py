@@ -1,4 +1,3 @@
-import  django_filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from rest_framework.pagination import LimitOffsetPagination
@@ -37,8 +36,8 @@ class ReviewViewSet(GetTitleBaseViewSet):
 
     def perform_create(self, serializer):
         serializer.save(
-            author=self.request.user
-#            title=self.get_title()
+            author=self.request.user,
+            title=self.get_title()
         )
 
     def get_queryset(self):
@@ -51,7 +50,7 @@ class CommentViewSet(GetReviewBaseViewSet):
     def perform_create(self, serializer):
         serializer.save(
             author=self.request.user,
-#            review=self.get_review()
+            review=self.get_review()
         )
 
     def get_queryset(self):
@@ -59,36 +58,19 @@ class CommentViewSet(GetReviewBaseViewSet):
         return review.comments.all()
 
 
-# class MatchFilterSet(django_filters.FilterSet):
-#     genre = django_filters.CharFilter(field_name='group__slug')
-#
-#     class Meta:
-#         model = Genre
-#         fields = ['genre']
-
 class TitleViewSet(ModelViewSet):
-    # filter_class = MatchFilterSet
     queryset = Title.objects.all()
-    class TitleFilter(django_filters.FilterSet):
-        category = django_filters.filters.CharFilter(field_name='category__slug')
-        genre = django_filters.filters.CharFilter(field_name='genre__slug')
-        name = django_filters.filters.CharFilter(field_name='name', method='name_filter')
-        class Meta:
-            model = Title
-            fields = ['category', 'genre', 'year', 'name']
-#            fields = {
-#                'category': ['exact'],
-#                'genre': ['exact'],
-#                'year': ['exact'],
-#                'name': ['icontains']
-#            }
-        def name_filter(self, queryset, name, name_start):
-            return  queryset.filter(name__startswith=name_start)
-    filterset_class = TitleFilter
     serializer_class = TitleSerializer
-    permission_classes = (AdminOrReadOnly,)
+    permission_classes = (
+        AdminOrReadOnly,
+        # AllowAny,
+#        EditAccessOrReadOnly,
+#        AdminOrModeratorOrReadOnly,
+    )
     pagination_class = LimitOffsetPagination
     filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['category__slug', 'genre__slug', 'name', 'year']
+
 
 class GenreViewSet(
                    mixins.CreateModelMixin,

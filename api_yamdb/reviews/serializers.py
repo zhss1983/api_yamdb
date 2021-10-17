@@ -5,44 +5,35 @@ from rest_framework.serializers import (
     CurrentUserDefault, ModelSerializer, SlugRelatedField)
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
+from django.http import QueryDict
+
+from rest_framework.utils import html, model_meta, representation
 
 from .models import Category, Comment, Genre, Review, Title, Genre_Title
 
-SCORE_VALIDATION_ERROR_MESSAGE = ('Оценка должна быть числом целым в диапазоне'
-                                  ' от 0 до 10.')
 
-
-class GetTitle:
+class GetDefault:
     requires_context = True
 
+    def __call__(self, serializer_field):
+        pass
+
+    def __repr__(self):
+        return '%s()' % self.__class__.__name__
+
+
+class GetTitle(GetDefault):
     def __call__(self, serializer_field):
         title_id = serializer_field.context['view'].kwargs.get('title_id')
         title = get_object_or_404(Title, pk=title_id)
         return title
-#        return serializer_field.context['request'].user
 
-    def __repr__(self):
-        return '%s()' % self.__class__.__name__
 
-class GetReview:
-    requires_context = True
-
+class GetReview(GetDefault):
     def __call__(self, serializer_field):
         title = GetTitle()(serializer_field)
         review_id = serializer_field.context['view'].kwargs.get('review_id')
-        rew = get_object_or_404(
-            title.reviews, pk=review_id)
-        return rew
-
-#        return serializer_field.context['request'].user
-
-    def __repr__(self):
-        return '%s()' % self.__class__.__name__
-
-
-
-
-
+        return get_object_or_404(title.reviews, pk=review_id)
 
 
 class CommentSerializer(ModelSerializer):
@@ -51,59 +42,78 @@ class CommentSerializer(ModelSerializer):
         slug_field='username', read_only=True, default=CurrentUserDefault())
 
     class Meta:
-        #fields = ('id', 'text', 'author', 'pub_date')
         fields = ('id', 'text', 'author', 'pub_date', 'review')
         model = Comment
         read_only_fields = ('id', )
 
 
+class MetaGenreCategore:
+    fields = ('name', 'slug')
+    lookup_field = 'slug'
+    extra_kwargs = {'url': {'lookup_field': 'slug'}}
+
+
 class GenreSerializer(ModelSerializer):
-    class Meta:
-        fields = ('name', 'slug')
+    class Meta(MetaGenreCategore):
         model = Genre
-        lookup_field = 'slug'
-        extra_kwargs = {
-            'url': {'lookup_field': 'slug'}
-        }
 
 
 class CategorySerializer(ModelSerializer):
-    class Meta:
-        fields = ('name', 'slug')
+    class Meta(MetaGenreCategore):
         model = Category
-        lookup_field = 'slug'
-        extra_kwargs = {
-            'url': {'lookup_field': 'slug'}
-        }
 
 class ReviewSerializer(ModelSerializer):
+    SCORE_ERROR = 'Оценка должна быть числом целым в диапазоне от 0 до 10.'
+
     author = SlugRelatedField(
         slug_field='username', read_only=True, default=CurrentUserDefault())
     title = serializers.HiddenField(default=GetTitle())
 
     class Meta:
+        UNIQUE_ERROR = 'Одно произведение, один отзыв, не более.'
         fields = ('id', 'text', 'author', 'score', 'pub_date', 'title')
-        #fields = ('id', 'text', 'author', 'score', 'pub_date')
         model = Review
         read_only_fields = ('id', 'author', )
         validators = (
             UniqueTogetherValidator(
                 queryset=Review.objects.all(),
                 fields=('author', 'title'),
-                message='Одно произведение, один отзыв, не более.'
+                message=UNIQUE_ERROR
             ),
         )
 
     def validate_score(self, value):
         if not (isinstance(value, int) and 0 <= value <= 10):
-            raise ValidationError(SCORE_VALIDATION_ERROR_MESSAGE)
+            raise ValidationError(self.SCORE_ERROR)
         return value
+
+
+def genre_save(wrapper_method):
+    def wrapper(self, var1, var2=None):
+        if isinstance(self.initial_data, QueryDict):
+            genres = self.initial_data.getlist('genre')
+        else:
+            genres = self.initial_data.get('genre')
+        genres_list = tuple(
+            get_object_or_404(Genre, slug=genre) for genre in genres)
+        if var2:
+            instance = wrapper_method(self, var1, var2)
+        else:
+            instance = wrapper_method(self, var1)
+        for genre in genres_list:
+            Genre_Title.objects.get_or_create(title=instance, genre=genre)
+        return instance
+    return wrapper
+
+
+
+
 
 
 class TitleSerializer(ModelSerializer):
     id = serializers.IntegerField(source='pk', required=False, read_only=True)
     genre = GenreSerializer(many=True, read_only=True)
-    category = CategorySerializer(read_only=True)
+    category = CategorySerializer(read_only=True, many=False)
     rating = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
@@ -118,27 +128,31 @@ class TitleSerializer(ModelSerializer):
             return round(rating, 2)
         return None
 
-    def category_by_url(self):
-        return get_object_or_404(
-            Category, slug=self.initial_data.get('category'))
 
+    def category_getting(self):
+        slug = self.initial_data.get('category')
+        category = get_object_or_404(Category, slug=slug)
+        print(category)
+        return category
 
+    @genre_save
     def create(self, validated_data):
-        genres = self.initial_data.getlist('genre')
-        genres_list = tuple(
-            get_object_or_404(Genre, slug=genre) for genre in genres)
         instance = Title.objects.create(
-            **validated_data, category=self.category_by_url())
-        for genre in genres_list:
-            Genre_Title.objects.get_or_create(title=instance, genre=genre)
+            **validated_data, category=self.category_getting())
         return instance
 
 
+    @genre_save
     def update(self, instance, validated_data):
-        genres = self.initial_data.getlist('genre')
-        genres_list = tuple(
-            get_object_or_404(Genre, slug=genre) for genre in genres)
-        instance.category = self.category_by_url()
-        for genre in genres_list:
-            Genre_Title.objects.get_or_create(title=instance, genre=genre)
+        instance.category = self.category_getting()
+
+        for attr, value in validated_data.items():
+            if attr not in ['category', 'genre']:
+                setattr(instance, attr, value)
+
+        #instance.name = validated_data.get('name', instance.name)
+        #instance.year = validated_data.get('year', instance.year)
+        #instance.description = validated_data.get(
+        #    'description', instance.description)
+        instance.save()
         return instance
