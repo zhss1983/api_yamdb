@@ -91,6 +91,51 @@ python manage.py runserver
 
 #### Регистрация нового пользователя
 
-...
+Для получения JWT-токена необходимо отправить **JSON** запрос, содержащий
+имя пользователя и имя почтового ящика.
 
-Необходимо дописать ...
+**JSON** запрос:
+
+```JSON
+{
+  "email": "string",
+  "username": "string"
+}
+```
+
+POST: [/api/v1/auth/signup/](http://127.0.0.1:8000/api/v1/auth/signup/)
+
+В письме придёт код подтверждения. Дальше необходимо необходимо отправить
+**JSON** запрос, содержащий код подтверждения:
+
+```JSON
+{
+  "username": "string",
+  "confirmation_code": "string"
+}
+```
+
+POST: [/api/v1/auth/token/](http://127.0.0.1:8000/api/v1/auth/token/)
+
+В ответ вы получите токен для доступа к сервису.
+
+```JSON
+{
+  "token": "string"
+}
+```
+
+Вам будут доступны:
+- Категории:
+  [/api/v1/categories/](http://127.0.0.1:8000/api/v1/categories/)
+- Жанры:
+  [/api/v1/genres/](http://127.0.0.1:8000/api/v1/genres/)
+- Произведения:
+  [/api/v1/titles/](http://127.0.0.1:8000/api/v1/titles/)
+- Отзывы:
+  [/api/v1/titles/{title_id}/reviews/](http://127.0.0.1:8000/api/v1/titles/1/reviews/)
+- Комментарии:
+  [/api/v1/titles/{title_id}/reviews/{review_id}/comments/](http://127.0.0.1:8000/api/v1/titles/1/reviews/1/comments/)
+ 
+По всем вопросам обращайтесь к администраторам по электронной почте
+[ask@api_yamdb.ru](mailto:ask@api_yamdb.ru)
