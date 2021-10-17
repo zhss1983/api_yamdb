@@ -7,8 +7,6 @@ from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from django.http import QueryDict
 
-from rest_framework.utils import html, model_meta, representation
-
 from .models import Category, Comment, Genre, Review, Title, Genre_Title
 
 
@@ -62,6 +60,7 @@ class CategorySerializer(ModelSerializer):
     class Meta(MetaGenreCategore):
         model = Category
 
+
 class ReviewSerializer(ModelSerializer):
     SCORE_ERROR = 'Оценка должна быть числом целым в диапазоне от 0 до 10.'
 
@@ -86,27 +85,6 @@ class ReviewSerializer(ModelSerializer):
         if not (isinstance(value, int) and 0 <= value <= 10):
             raise ValidationError(self.SCORE_ERROR)
         return value
-
-
-def genre_save(wrapper_method):
-    def wrapper(self, var1, var2=None):
-        if isinstance(self.initial_data, QueryDict):
-            genres = self.initial_data.getlist('genre')
-        else:
-            genres = self.initial_data.get('genre')
-        genres_list = tuple(
-            get_object_or_404(Genre, slug=genre) for genre in genres)
-        if var2:
-            instance = wrapper_method(self, var1, var2)
-        else:
-            instance = wrapper_method(self, var1)
-        for genre in genres_list:
-            Genre_Title.objects.get_or_create(title=instance, genre=genre)
-        return instance
-    return wrapper
-
-
-
 
 
 
@@ -135,6 +113,24 @@ class TitleSerializer(ModelSerializer):
         print(category)
         return category
 
+    def genre_save(wrapper_method):
+        def wrapper(self, var1, var2=None):
+            if isinstance(self.initial_data, QueryDict):
+                genres = self.initial_data.getlist('genre')
+            else:
+                genres = self.initial_data.get('genre')
+            genres_list = tuple(
+                get_object_or_404(Genre, slug=genre) for genre in genres)
+            if var2:
+                instance = wrapper_method(self, var1, var2)
+            else:
+                instance = wrapper_method(self, var1)
+            for genre in genres_list:
+                Genre_Title.objects.get_or_create(title=instance, genre=genre)
+            return instance
+
+        return wrapper
+
     @genre_save
     def create(self, validated_data):
         instance = Title.objects.create(
@@ -150,9 +146,5 @@ class TitleSerializer(ModelSerializer):
             if attr not in ['category', 'genre']:
                 setattr(instance, attr, value)
 
-        #instance.name = validated_data.get('name', instance.name)
-        #instance.year = validated_data.get('year', instance.year)
-        #instance.description = validated_data.get(
-        #    'description', instance.description)
         instance.save()
         return instance

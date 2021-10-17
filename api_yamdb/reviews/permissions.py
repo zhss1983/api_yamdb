@@ -26,13 +26,3 @@ class AdminOrReadOnly(BasePermission):
         auth = request.user and request.user.is_authenticated
         admin = auth and (request.user.is_superuser or request.user.role == 'admin')
         return safe or admin
-
-class AdminOrModeratorOrReadOnly(BasePermission):
-    """Object-level permission to only allow administrator."""
-
-    def has_permission(self, request, view):
-        safe = request.method in SAFE_METHODS
-        auth = request.user and request.user.is_authenticated
-        admin = auth and (request.user.is_superuser or request.user.role in (
-        'moderator', 'admin'))
-        return safe or admin
