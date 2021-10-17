@@ -115,7 +115,7 @@ class TitleSerializer(ModelSerializer):
         slug = self.initial_data.get('category')
         return get_object_or_404(Category, slug=slug)
 
-    def genre_save(wrapper_method):
+    def __genre_save(wrapper_method):
         """Genres access granted or 404"""
         def wrapper(self, *args):
             if isinstance(self.initial_data, QueryDict):
@@ -130,12 +130,12 @@ class TitleSerializer(ModelSerializer):
             return instance
         return wrapper
 
-    @genre_save
+    @__genre_save
     def create(self, validated_data):
         return Title.objects.create(
             **validated_data, category=self.category_getting())
 
-    @genre_save
+    @__genre_save
     def update(self, instance, validated_data):
         instance.category = self.category_getting()
         for attr, value in validated_data.items():
