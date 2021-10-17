@@ -39,17 +39,13 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     # Добавляем новое обязательное поле
     confirmation_code = serializers.CharField(max_length=30, required=True)
 
-    @classmethod
-    def get_token(cls, user):
-        return RefreshToken.for_user(user)
-
     def validate(self, attrs):
         """Проверяет confirmation_code."""
         username = attrs['username']
         user = get_object_or_404(User, username=username)
         if attrs['confirmation_code'] != user.code.code:
             raise serializers.ValidationError('Wrong confirmation code')
-        refresh = self.get_token(user)
+        refresh = RefreshToken.for_user(user)
         return {
             'refresh': str(refresh),
             'access': str(refresh.access_token)
@@ -76,7 +72,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         email = validated_data['email']
         c_code = c_code_generate()
         user, _ = User.objects.get_or_create(username=username, email=email)
-        print('User is', user.username)
         Code.objects.get_or_create(user_id=user.id, code=c_code)
         send_mail(
             recipient_list=(user.email,),
