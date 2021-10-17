@@ -39,17 +39,13 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     confirmation_code = serializers.CharField(max_length=30,
                                               required=True)
 
-    @classmethod
-    def get_token(cls, user):
-        return RefreshToken.for_user(user)
-
     def validate(self, attrs):
         """Проверяет confirmation_code."""
         username = attrs['username']
         user = get_object_or_404(User, username=username)
         if attrs['confirmation_code'] != user.code.code:
             raise serializers.ValidationError('Wrong confirmation code')
-        refresh = self.get_token(user)
+        refresh = RefreshToken.for_user(user)
         data = {
             'refresh': str(refresh),
             'access': str(refresh.access_token)
