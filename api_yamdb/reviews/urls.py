@@ -1,7 +1,5 @@
-from django.contrib import admin
 from django.urls import path
 from django.urls import include
-from django.views.generic import TemplateView
 
 from rest_framework.routers import DefaultRouter
 
@@ -31,12 +29,6 @@ api_router_v1.register(
     basename='users'
 )
 api_router_v1.register(
-    'auth/signup',
-    UserRegistrationViewSet,
-    basename='signup'
-)
-# r'posts/(?P<post_id>\d+)/
-api_router_v1.register(
     'titles',
     TitleViewSet,
     basename='titles'
@@ -56,4 +48,7 @@ urlpatterns = [
     path('v1/', include(api_router_v1.urls)),
     path('v1/auth/token/', MyTokenObtainPairView.as_view(),
          name='token_obtain_pair'),
+    path('v1/auth/signup/', UserRegistrationViewSet.as_view(),
+         name='token_obtain_pair'
+         ),
 ]
