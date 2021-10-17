@@ -74,7 +74,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         c_code = c_code_generate()
         user, _ = User.objects.get_or_create(
             username=username, email=email)
-        print('User is', user.username)
         Code.objects.get_or_create(
             user_id=user.id, code=c_code)
         send_mail(
