@@ -1,12 +1,13 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
+from rest_framework.serializers import (CurrentUserDefault,
+                                        ModelSerializer,
+                                        SlugRelatedField)
 from rest_framework.validators import UniqueTogetherValidator
-from rest_framework.serializers import (
-    CurrentUserDefault, ModelSerializer, SlugRelatedField)
 
 from django.db.models import Avg
-from django.shortcuts import get_object_or_404
 from django.http import QueryDict
+from django.shortcuts import get_object_or_404
 
 from .models import Category, Comment, Genre, Review, Title, Genre_Title
 
@@ -26,8 +27,7 @@ class GetTitle(GetDefault):
     """Get Title grantee from id in url or 404"""
     def __call__(self, serializer_field):
         title_id = serializer_field.context['view'].kwargs.get('title_id')
-        title = get_object_or_404(Title, pk=title_id)
-        return title
+        return get_object_or_404(Title, pk=title_id)
 
 
 class GetReview(GetDefault):
@@ -109,7 +109,6 @@ class TitleSerializer(ModelSerializer):
         if rating:
             return round(rating, 2)
         return None
-
 
     def category_getting(self):
         """Category access granted or 404"""

@@ -1,8 +1,9 @@
 from rest_framework.filters import SearchFilter
-from rest_framework.mixins import (
-    CreateModelMixin, DestroyModelMixin, ListModelMixin)
-from rest_framework.pagination import (
-    LimitOffsetPagination, PageNumberPagination)
+from rest_framework.mixins import (CreateModelMixin,
+                                   DestroyModelMixin,
+                                   ListModelMixin)
+from rest_framework.pagination import (LimitOffsetPagination,
+                                       PageNumberPagination)
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
@@ -11,14 +12,13 @@ from django.shortcuts import get_object_or_404
 
 from .permissions import EditAccessOrReadOnly, AdminOrReadOnly
 from .models import Title, Genre, Category
-from .serializers import (
-    CategorySerializer,
-    CommentSerializer,
-    GenreSerializer,
-    ReviewSerializer,
-    TitleSerializer
-)
+from .serializers import (CategorySerializer,
+                          CommentSerializer,
+                          GenreSerializer,
+                          ReviewSerializer,
+                          TitleSerializer)
 from .filters import TitleFilter
+
 
 class GetTitleBaseViewSet(ModelViewSet):
     permission_classes = (EditAccessOrReadOnly,)
@@ -68,8 +68,10 @@ class TitleViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend]
 
 
-class CategoryGenreViewSet(
-    CreateModelMixin, DestroyModelMixin, ListModelMixin, GenericViewSet):
+class CategoryGenreViewSet(CreateModelMixin,
+                           DestroyModelMixin,
+                           ListModelMixin,
+                           GenericViewSet):
     """Base ViewSet class for GenreViewSet and CategoryViewSet"""
     permission_classes = (AdminOrReadOnly, IsAuthenticatedOrReadOnly)
     pagination_class = LimitOffsetPagination

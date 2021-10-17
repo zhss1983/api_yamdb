@@ -19,7 +19,10 @@ class Comment(models.Model):
         related_name='comments'
     )
     pub_date = models.DateTimeField(
-        'Дата добавления', auto_now_add=True, db_index=True)
+        verbose_name='Дата добавления',
+        auto_now_add=True,
+        db_index=True
+    )
 
     class Meta:
         verbose_name = 'Комментарий'

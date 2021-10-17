@@ -18,8 +18,15 @@ class Review(models.Model):
         on_delete=models.CASCADE,
         related_name='reviews'
     )
-    score = models.IntegerField('Оценка', default=5, blank=False)
-    pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
+    score = models.IntegerField(
+        verbose_name='Оценка',
+        default=5,
+        blank=False
+    )
+    pub_date = models.DateTimeField(
+        verbose_name='Дата публикации',
+        auto_now_add=True
+    )
 
     class Meta:
         verbose_name = 'Отзыв'

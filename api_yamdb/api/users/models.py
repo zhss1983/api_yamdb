@@ -5,9 +5,7 @@ from .managers import CustomUserManager
 
 
 class User(AbstractUser):
-    """Кастомная модель пользователя
-    с доплнительными полями 'role' и 'bio'.
-    """
+    """Кастомная модель пользователя с доплнительными полями 'role' и 'bio'."""
     ACCESS_LEVEL = (
         ('user', 'user'),
         ('moderator', 'moderator'),

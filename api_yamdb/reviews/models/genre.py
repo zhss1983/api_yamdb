@@ -2,8 +2,8 @@ from django.db import models
 
 
 class Genre(models.Model):
-    name = models.CharField(verbose_name='Жанр', max_length=256, unique=True)
-    slug = models.SlugField(verbose_name='Адрес жанра', max_length=50, unique=True)
+    name = models.CharField('Жанр', max_length=256, unique=True)
+    slug = models.SlugField('Адрес жанра', max_length=50, unique=True)
 
     class Meta:
         verbose_name = 'Жанр'
