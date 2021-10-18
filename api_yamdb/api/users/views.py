@@ -1,13 +1,12 @@
-
 from rest_framework import generics, filters, permissions, status, viewsets
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from api.users.models import User
-from .permissions import IsAdmin
-from .serializers import (MyTokenObtainPairSerializer,
-                          UserRegistrationSerializer,
-                          UserSerializer)
+from api.users.permissions import IsAdmin
+from api.users.serializers import (YAMDBTokenObtainPairSerializer,
+                                   UserRegistrationSerializer,
+                                   UserSerializer)
 
 
 class UserRegistrationViewSet(generics.CreateAPIView):
@@ -33,11 +32,11 @@ class UserRegistrationViewSet(generics.CreateAPIView):
                         status=status.HTTP_200_OK, headers=headers)
 
 
-class MyTokenObtainPairView(TokenObtainPairView):
+class YAMBDTokenObtainPairView(TokenObtainPairView):
     """Вьюсет для получения токена. Наследуется от
     вьюсета из Simple JWT.
     """
-    serializer_class = MyTokenObtainPairSerializer
+    serializer_class = YAMDBTokenObtainPairSerializer
     permission_classes = (permissions.AllowAny, )
 
 
@@ -104,7 +103,7 @@ class UserViewSet(viewsets.ModelViewSet):
         """Не даёт пользователю без прав админа поменять
         свою роль.
         """
-        if (self.request.user.role != 'admin'
+        if (self.request.user.not_admin
                 and 'role' in serializer.validated_data):
             return Response(status=status.HTTP_403_FORBIDDEN)
         serializer.save()
