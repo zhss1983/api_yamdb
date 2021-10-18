@@ -1,13 +1,11 @@
-
-from rest_framework import generics, filters, permissions, status, viewsets
+from .models import User
+from rest_framework import filters, generics, permissions, status, viewsets
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from api.users.models import User
 from .permissions import IsAdmin
 from .serializers import (MyTokenObtainPairSerializer,
-                          UserRegistrationSerializer,
-                          UserSerializer)
+                          UserRegistrationSerializer, UserSerializer)
 
 
 class UserRegistrationViewSet(generics.CreateAPIView):

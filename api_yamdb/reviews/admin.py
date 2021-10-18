@@ -1,7 +1,7 @@
+from api.users.models import User
 from django.contrib import admin
 
 from .models import Category, Comment, Genre, Review, Title
-from api.users.models import User
 
 EMPTY = '-пусто-'
 
@@ -50,3 +50,4 @@ admin.site.register(Genre, GenreAdmin)
 admin.site.register(Review, ReviewAdmin)
 admin.site.register(Title, TitleAdmin)
 admin.site.register(User, UserAdmin)
+

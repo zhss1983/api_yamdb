@@ -1,13 +1,13 @@
 from random import choice
+
+from django.core.mail import send_mail
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from django.core.mail import send_mail
-from django.shortcuts import get_object_or_404
-
-from api.users.models import Code, User
 from api_yamdb.settings import EMAIL_YAMDB
+from .models import Code, User
 
 
 def c_code_generate():

@@ -11,7 +11,7 @@ from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from django.shortcuts import get_object_or_404
 
 from .permissions import EditAccessOrReadOnly, AdminOrReadOnly
-from .models import Title, Genre, Category
+from api_yamdb.reviews.models import Title, Genre, Category
 from .serializers import (CategorySerializer,
                           CommentSerializer,
                           GenreSerializer,
@@ -65,7 +65,7 @@ class TitleViewSet(ModelViewSet):
     permission_classes = (AdminOrReadOnly,)
     serializer_class = TitleSerializer
     pagination_class = LimitOffsetPagination
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = (DjangoFilterBackend,)
 
 
 class CategoryGenreViewSet(CreateModelMixin,

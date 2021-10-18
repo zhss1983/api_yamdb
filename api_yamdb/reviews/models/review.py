@@ -1,7 +1,7 @@
+from api.users.models import User
 from django.db import models
 
 from .title import Title
-from api.users.models import User
 
 
 class Review(models.Model):
@@ -16,7 +16,7 @@ class Review(models.Model):
         User,
         verbose_name='Автор',
         on_delete=models.CASCADE,
-        related_name='reviews'
+        related_name='api'
     )
     score = models.IntegerField(
         verbose_name='Оценка',

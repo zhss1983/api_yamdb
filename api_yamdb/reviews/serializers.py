@@ -9,7 +9,7 @@ from django.db.models import Avg
 from django.http import QueryDict
 from django.shortcuts import get_object_or_404
 
-from .models import Category, Comment, Genre, Review, Title, Genre_Title
+from api_yamdb.reviews.models import Category, Comment, Genre, Review, Title
 
 
 class GetDefault:
@@ -125,15 +125,24 @@ class TitleSerializer(ModelSerializer):
             genres_list = tuple(
                 get_object_or_404(Genre, slug=genre) for genre in genres)
             instance = wrapper_method(self, *args)
-            for genre in genres_list:
-                Genre_Title.objects.get_or_create(title=instance, genre=genre)
+            # for genre in genres_list:
+            #     Genre_Title.objects.get_or_create(title=instance, genre=genre)
             return instance
         return wrapper
 
-    @__genre_save
+    # @__genre_save
     def create(self, validated_data):
-        return Title.objects.create(
+        title = Title.objects.create(
             **validated_data, category=self.category_getting())
+        if isinstance(self.initial_data, QueryDict):
+            genres = self.initial_data.getlist('genre')
+        else:
+            genres = self.initial_data.get('genre')
+        genres_list = []
+        for genre in genres:
+            genres_list.append(Genre.objects.get(slug=genre))
+        title.genre.set(genres_list)
+        return title
 
     @__genre_save
     def update(self, instance, validated_data):
