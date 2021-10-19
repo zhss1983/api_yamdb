@@ -23,4 +23,3 @@ class GetReviewBaseViewSet(GetTitleBaseViewSet):
         title = self.get_title()
         review_id = self.kwargs.get('review_id')
         return get_object_or_404(title.reviews, pk=review_id)
-

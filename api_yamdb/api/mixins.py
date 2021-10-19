@@ -16,5 +16,3 @@ class CategoryGenreViewSet(CreateModelMixin, DestroyModelMixin,
     filter_backends = (SearchFilter,)
     search_fields = ('=name',)
     lookup_field = 'slug'
-
-

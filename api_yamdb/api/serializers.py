@@ -27,6 +27,7 @@ class GenreSerializer(ModelSerializer):
         lookup_field = 'slug'
         extra_kwargs = {'url': {'lookup_field': 'slug'}}
 
+
 class CategorySerializer(GenreSerializer):
     class Meta(GenreSerializer.Meta):
         model = Category
