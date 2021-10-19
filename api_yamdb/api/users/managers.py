@@ -1,5 +1,9 @@
 from django.contrib.auth.base_user import BaseUserManager
 
+USER_LEVEL = 'user'
+MODERATOR_LEVEL = 'moderator'
+ADMIN_LEVEL = 'admin'
+
 
 class CustomUserManager(BaseUserManager):
     """
@@ -15,5 +19,5 @@ class CustomUserManager(BaseUserManager):
 
     def create_superuser(self, email, password, **extra_fields):
         extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('role', 'admin')
+        extra_fields.setdefault('role', ADMIN_LEVEL)
         return self.create_user(email, password, **extra_fields)

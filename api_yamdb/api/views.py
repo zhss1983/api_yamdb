@@ -5,13 +5,13 @@ from django.db.models import Avg
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .filters import TitleFilter
-from reviews.models import Category, Genre, Title, Review
+from .mixins import CategoryGenreViewSet
 from .permissions import AdminOrReadOnly
 from .serializers import (CategorySerializer, CommentSerializer,
                           GenreSerializer, ReviewSerializer,
-                          TitleSerializerSafe, TitleSerializerEdit)
-from .mixins import CategoryGenreViewSet
+                          TitleSerializerEdit, TitleSerializerSafe)
 from .viewsets import GetTitleBaseViewSet, GetReviewBaseViewSet
+from reviews.models import Category, Genre, Title
 
 
 class ReviewViewSet(GetTitleBaseViewSet):

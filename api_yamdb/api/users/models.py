@@ -1,26 +1,23 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from api.users.managers import CustomUserManager
-
+from .managers import (
+    CustomUserManager, USER_LEVEL, MODERATOR_LEVEL, ADMIN_LEVEL)
 
 class User(AbstractUser):
     """Кастомная модель пользователя с доплнительными полями 'role' и 'bio'."""
-    USER = 'user'
-    MODERATOR = 'moderator'
-    ADMIN = 'admin'
 
     ACCESS_LEVEL = (
-        (USER, 'user'),
-        (MODERATOR, 'moderator'),
-        (ADMIN, 'admin')
+        (USER_LEVEL, 'user'),
+        (MODERATOR_LEVEL, 'moderator'),
+        (ADMIN_LEVEL, 'admin')
     )
 
     role = models.CharField(
         verbose_name='Права',
         max_length=9,
         choices=ACCESS_LEVEL,
-        default='user'
+        default=USER_LEVEL
     )
     bio = models.TextField(
         verbose_name='Биография',
@@ -37,7 +34,7 @@ class User(AbstractUser):
 
     @property
     def not_admin(self):
-        if self.role != self.ADMIN:
+        if self.role != ADMIN_LEVEL:
             return True
         else:
             return False

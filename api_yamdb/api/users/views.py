@@ -2,7 +2,7 @@ from rest_framework import filters, generics, permissions, status, viewsets
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from .models import User
+from .models import User, ADMIN_LEVEL
 from .permissions import IsAdmin
 from .serializers import (YAMDBTokenObtainPairSerializer,
                           UserRegistrationSerializer,
@@ -93,7 +93,7 @@ class UserViewSet(viewsets.ModelViewSet):
         для его выполнения не хватает.
         -------------------------------------------
         """
-        if request.user.role != 'admin' and kwargs['username'] == 'me':
+        if request.user.role != ADMIN_LEVEL and kwargs['username'] == 'me':
             return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
         instance = self.get_object()
         self.perform_destroy(instance)

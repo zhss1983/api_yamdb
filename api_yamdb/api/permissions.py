@@ -1,6 +1,7 @@
 from rest_framework.permissions import (SAFE_METHODS, BasePermission,
                                         IsAuthenticatedOrReadOnly)
 
+from .users.models import ADMIN_LEVEL, MODERATOR_LEVEL
 
 class EditAccessOrReadOnly(IsAuthenticatedOrReadOnly):
     """
@@ -8,7 +9,7 @@ class EditAccessOrReadOnly(IsAuthenticatedOrReadOnly):
     moderator, administrator) to edit it.
     Assumes the model instance has an `author` attribute.
     """
-    FULL_ACCESS = ('moderator', 'admin')
+    FULL_ACCESS = (MODERATOR_LEVEL, ADMIN_LEVEL)
 
     def has_object_permission(self, request, view, obj):
         safe = request.method in SAFE_METHODS
@@ -29,5 +30,5 @@ class AdminOrReadOnly(BasePermission):
         safe = request.method in SAFE_METHODS
         auth = request.user and request.user.is_authenticated
         admin = auth and (request.user.is_superuser
-                          or request.user.role == 'admin')
+                          or request.user.role == ADMIN_LEVEL)
         return safe or admin
