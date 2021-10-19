@@ -83,8 +83,4 @@ class TitleSerializerSafe(ModelSerializer):
         read_only_fields = ('id', 'rating', 'genre', 'category')
 
     def get_rating(self, obj):
-        """Calculates the average rating based on api."""
-        rating = obj.reviews.aggregate(Avg('score')).get('score__avg')
-        if rating:
-            return round(rating, 2)
-        return None
+        return obj.rating

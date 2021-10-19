@@ -1,10 +1,11 @@
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.viewsets import ModelViewSet
 
+from django.db.models import Avg
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .filters import TitleFilter
-from reviews.models import Category, Genre, Title
+from reviews.models import Category, Genre, Title, Review
 from .permissions import AdminOrReadOnly
 from .serializers import (CategorySerializer, CommentSerializer,
                           GenreSerializer, ReviewSerializer,
@@ -36,7 +37,7 @@ class CommentViewSet(GetReviewBaseViewSet):
 
 
 class TitleViewSet(ModelViewSet):
-    queryset = Title.objects.all()
+    queryset = Title.objects.annotate(rating=Avg('reviews__score'))
     filterset_class = TitleFilter
     permission_classes = (AdminOrReadOnly,)
     pagination_class = LimitOffsetPagination

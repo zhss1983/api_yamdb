@@ -16,7 +16,7 @@ class Review(models.Model):
         User,
         verbose_name='Автор',
         on_delete=models.CASCADE,
-        related_name='api'
+        related_name='reviews'
     )
     score = models.IntegerField(
         verbose_name='Оценка',
