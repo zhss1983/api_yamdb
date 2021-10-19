@@ -2,7 +2,9 @@ from rest_framework import permissions
 
 
 class IsAdmin(permissions.BasePermission):
-    """Даёт разрещение аутентифицированному пользователю с статусом админа."""
+    """Даёт разрещение аутентифицированному пользователю
+    со статусом админа.
+    """
 
     def has_permission(self, request, view):
         return (request.user.is_authenticated
