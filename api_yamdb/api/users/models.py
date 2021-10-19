@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from .constants import ADMIN, ACCESS_LEVEL
+from .constants import ADMIN, ACCESS_LEVEL, USER
 from .managers import CustomUserManager
 
 
@@ -12,7 +12,7 @@ class User(AbstractUser):
         verbose_name='Права',
         max_length=9,
         choices=ACCESS_LEVEL,
-        default='user'
+        default=USER
     )
     bio = models.TextField(
         verbose_name='Биография',
