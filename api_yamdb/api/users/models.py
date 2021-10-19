@@ -6,6 +6,7 @@ from api.users.managers import CustomUserManager
 
 class User(AbstractUser):
     """Кастомная модель пользователя с доплнительными полями 'role' и 'bio'."""
+
     USER = 'user'
     MODERATOR = 'moderator'
     ADMIN = 'admin'
