@@ -2,6 +2,7 @@ from rest_framework import permissions
 
 from .constants import ADMIN
 
+
 class IsAdmin(permissions.BasePermission):
     """Даёт разрещение аутентифицированному пользователю
     со статусом админа.

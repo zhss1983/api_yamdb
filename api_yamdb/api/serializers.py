@@ -4,8 +4,9 @@ from rest_framework.serializers import (CurrentUserDefault, ModelSerializer,
                                         SlugRelatedField)
 from rest_framework.validators import UniqueTogetherValidator
 
-from .getdefault import GetReview, GetTitle
 from reviews.models import Category, Comment, Genre, Review, Title
+
+from .getdefault import GetReview, GetTitle
 
 
 class CommentSerializer(ModelSerializer):

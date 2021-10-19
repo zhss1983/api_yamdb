@@ -20,10 +20,12 @@ class Title(models.Model):
     description = models.TextField('Описание')
 
     class Meta:
+        verbose_name = 'Произведение'
+        verbose_name_plural = 'Произведения'
         constraints = (
             models.CheckConstraint(
                 check=models.Q(year__lte=timezone.now().year),
-                name='year_cannot_be_bigger_then_current'
+                name='year_lte_current'
                 # Данный метод работает, проверено.
                 # INSERT INTO reviews_title (category_id, description, year,
                 # name, id ) VALUES (1, '', 2022, 'Побег из Шоушенка 2', 1);

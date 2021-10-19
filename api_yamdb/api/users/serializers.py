@@ -7,8 +7,9 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import Code, User
 from api_yamdb.settings import EMAIL_YAMDB
+
+from .models import Code, User
 
 
 class YAMDBTokenObtainPairSerializer(TokenObtainPairSerializer):

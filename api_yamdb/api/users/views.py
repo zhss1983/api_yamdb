@@ -5,9 +5,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import User
 from .permissions import IsAdmin
-from .serializers import (YAMDBTokenObtainPairSerializer,
-                          UserRegistrationSerializer,
-                          UserSerializer)
+from .serializers import (UserRegistrationSerializer, UserSerializer,
+                          YAMDBTokenObtainPairSerializer)
 
 
 class UserRegistrationViewSet(generics.CreateAPIView):

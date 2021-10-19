@@ -1,5 +1,6 @@
-from api.users.models import User
 from django.contrib import admin
+
+from api.users.models import User
 
 from .models import Category, Comment, Genre, Review, Title
 

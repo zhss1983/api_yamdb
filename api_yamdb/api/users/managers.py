@@ -2,6 +2,7 @@ from django.contrib.auth.base_user import BaseUserManager
 
 from .constants import ADMIN
 
+
 class CustomUserManager(BaseUserManager):
     """
     В методе create_superuser() присваиваем
