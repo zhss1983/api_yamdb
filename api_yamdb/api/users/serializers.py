@@ -1,27 +1,17 @@
-from random import choice
+import uuid
 
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
+
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from api_yamdb.settings import EMAIL_YAMDB
 from .models import Code, User
+from api_yamdb.settings import EMAIL_YAMDB
 
 
-def c_code_generate():
-    """
-    Генерирует случайную комбинацию букв и цифр
-    :return: confirmation_code
-    """
-    letters = ('abcdefghijkmnopqrstuvwxyz'
-               'ABCDEFGHJKLMNOPQRSTUVWXYZ'
-               '0123456789')
-    return ''.join([choice(letters) for _ in range(30)])
-
-
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+class YAMDBTokenObtainPairSerializer(TokenObtainPairSerializer):
     """
     Переопределяет стандартное поведение
     сериализатора при получении токкена.
@@ -44,7 +34,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         username = attrs['username']
         user = get_object_or_404(User, username=username)
         if attrs['confirmation_code'] != user.code.code:
-            raise serializers.ValidationError('Wrong confirmation code')
+            raise serializers.ValidationError('Неверный код подтверждения')
         refresh = RefreshToken.for_user(user)
         return {
             'refresh': str(refresh),
@@ -70,7 +60,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         """
         username = validated_data['username']
         email = validated_data['email']
-        c_code = c_code_generate()
+        c_code = uuid.uuid4()
         user, _ = User.objects.get_or_create(username=username, email=email)
         Code.objects.get_or_create(user_id=user.id, code=c_code)
         send_mail(

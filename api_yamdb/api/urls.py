@@ -2,10 +2,11 @@ from rest_framework.routers import DefaultRouter
 
 from django.urls import include, path
 
-from .views import (CategoryViewSet, CommentViewSet, GenreViewSet,
-                    ReviewViewSet, TitleViewSet)
-from .users.views import (MyTokenObtainPairView, UserRegistrationViewSet,
-                          UserViewSet)
+from .views import (
+    CategoryViewSet, CommentViewSet, GenreViewSet, ReviewViewSet, TitleViewSet)
+from api.users.views import (
+    YAMBDTokenObtainPairView, UserRegistrationViewSet, UserViewSet)
+
 
 api_router_v1 = DefaultRouter()
 api_router_v1.register(
@@ -41,7 +42,7 @@ api_router_v1.register(
 
 urlpatterns = [
     path('v1/', include(api_router_v1.urls)),
-    path('v1/auth/token/', MyTokenObtainPairView.as_view(),
+    path('v1/auth/token/', YAMBDTokenObtainPairView.as_view(),
          name='token_obtain_pair'),
     path('v1/auth/signup/', UserRegistrationViewSet.as_view(),
          name='token_obtain_pair'

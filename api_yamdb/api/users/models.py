@@ -1,25 +1,29 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from .managers import CustomUserManager
+from api.users.managers import CustomUserManager
 
 
 class User(AbstractUser):
     """Кастомная модель пользователя с доплнительными полями 'role' и 'bio'."""
+    USER = 'user'
+    MODERATOR = 'moderator'
+    ADMIN = 'admin'
+
     ACCESS_LEVEL = (
-        ('user', 'user'),
-        ('moderator', 'moderator'),
-        ('admin', 'admin')
+        (USER, 'user'),
+        (MODERATOR, 'moderator'),
+        (ADMIN, 'admin')
     )
 
     role = models.CharField(
-        'Права',
+        verbose_name='Права',
         max_length=9,
         choices=ACCESS_LEVEL,
         default='user'
     )
     bio = models.TextField(
-        'Биография',
+        verbose_name='Биография',
         blank=True,
     )
     email = models.EmailField(unique=True)
@@ -30,6 +34,13 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ['email']
 
     objects = CustomUserManager()
+
+    @property
+    def not_admin(self):
+        if self.role != self.ADMIN:
+            return True
+        else:
+            return False
 
     class Meta:
         verbose_name = 'Пользователь'
@@ -50,6 +61,10 @@ class Code(models.Model):
         primary_key=True
     )
     code = models.CharField(
-        max_length=30,
+        max_length=36,
         verbose_name='confirmation_code'
     )
+
+    class Meta:
+        verbose_name = 'Код подтверждения'
+        verbose_name_plural = 'Коды подтверждения'
