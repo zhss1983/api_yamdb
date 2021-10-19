@@ -37,6 +37,14 @@ class Review(models.Model):
                 fields=('title', 'author'),
                 name='unique_title_author',
             ),
+            models.CheckConstraint(
+                check=models.Q(score__gte=1),
+                name='score_gte_1',
+            ),
+            models.CheckConstraint(
+                check=models.Q(score__lte=10),
+                name='score_lte_10',
+            )
         )
 
     def __str__(self):
