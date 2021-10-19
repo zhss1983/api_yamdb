@@ -57,9 +57,11 @@ class UserViewSet(viewsets.ModelViewSet):
             permission_classes=[permissions.IsAuthenticated],
             methods=['PATCH', 'GET'])
     def me(self, request, *args, **kwargs):
-        serializer = UserSerializer(request.user, data=request.data, partial=True)
+        serializer = UserSerializer(
+            request.user, data=request.data, partial=True)
         if serializer.is_valid():
-            if self.request.user.not_admin and 'role' in serializer.validated_data:
+            if (self.request.user.not_admin
+                    and 'role' in serializer.validated_data):
                 serializer.validated_data.pop('role')
             serializer.save()
         return Response(serializer.data)
