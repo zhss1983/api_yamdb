@@ -27,14 +27,13 @@ class User(AbstractUser):
 
     objects = CustomUserManager()
 
-    @property
-    def not_admin(self):
-        return self.role != ADMIN
-
-
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+
+    @property
+    def not_admin(self):
+        return self.role != ADMIN
 
     def __str__(self):
         return self.username

@@ -19,6 +19,7 @@ class UserRegistrationViewSet(generics.CreateAPIView):
         response.status_code = status.HTTP_200_OK
         return response
 
+
 class YAMBDTokenObtainPairView(TokenObtainPairView):
     """Вьюсет для получения токена. Наследуется от
     вьюсета из Simple JWT.

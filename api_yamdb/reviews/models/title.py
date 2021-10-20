@@ -4,6 +4,7 @@ from .category import Category
 from .genre import Genre
 from .validators import year_validator
 
+
 class Title(models.Model):
     name = models.CharField(
         verbose_name='Произведение', max_length=200, db_index=True)
