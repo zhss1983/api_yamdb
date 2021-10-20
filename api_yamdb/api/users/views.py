@@ -15,22 +15,9 @@ class UserRegistrationViewSet(generics.CreateAPIView):
     permission_classes = (permissions.AllowAny,)
 
     def create(self, request, *args, **kwargs):
-        """
-        Переопределяет status code: тесты требуют, чтобы
-        было 200 ОК. Без этого переопределения возвращается
-        201.
-        --------------------------------------------------
-        Почему так - неясно, мы отправляем POST-запрос и
-        создаём новые данные (пользователя, код.)
-        --------------------------------------------------
-        """
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        super().perform_create(serializer)
-        headers = super().get_success_headers(serializer.data)
-        return Response(serializer.data,
-                        status=status.HTTP_200_OK, headers=headers)
-
+        response = super().create(request, *args, **kwargs)
+        response.status_code = status.HTTP_200_OK
+        return response
 
 class YAMBDTokenObtainPairView(TokenObtainPairView):
     """Вьюсет для получения токена. Наследуется от

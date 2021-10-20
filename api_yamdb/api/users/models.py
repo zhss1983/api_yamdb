@@ -29,10 +29,8 @@ class User(AbstractUser):
 
     @property
     def not_admin(self):
-        if self.role != ADMIN:
-            return True
-        else:
-            return False
+        return self.role != ADMIN
+
 
     class Meta:
         verbose_name = 'Пользователь'
