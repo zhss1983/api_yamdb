@@ -10,6 +10,7 @@ class CustomUserManager(BaseUserManager):
     """
     def create_user(self, email, password, **extra_fields):
         email = self.normalize_email(email)
+        extra_fields.setdefault('is_staff', True)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save()
